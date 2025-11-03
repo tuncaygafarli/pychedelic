@@ -10,7 +10,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Import classes
 from effects.calibrator import Calibrator
 from effects.color_chaos_manipulator import ColorChaosManipulator
-from functions.export_video import export_video_global
+from functions.render_processor import renderProcessor
 
 ASSETS_PATH = '../assets/'
 AUDIO_FILE = 'assets/worldwide.wav'
@@ -67,7 +67,7 @@ if output_frames:
     total_time = time.time() - start_time
     print(f"✅ Processed {len(output_frames)} frames in {total_time:.2f}s")
     print(f"📹 Exporting at {len(output_frames)/total_time:.1f} fps...")
-    export_video_global(output_frames, "../build/" + FILENAME, fps_cv)
+    render_processor(output_frames, "../build/" + FILENAME, fps_cv)
     print("🎬 Video exported: " + FILENAME)
 else:
     print("❌ No frames processed!")

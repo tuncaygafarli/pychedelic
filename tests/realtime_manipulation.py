@@ -9,7 +9,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from effects.calibrator import Calibrator
 from effects.color_chaos_manipulator import ColorChaosManipulator
-from functions.export_video import export_video_global
+from functions.render_processor import renderProcessor
 
 ASSETS_PATH = 'assets/'
 AUDIO_FILE = 'assets/worldwide.wav'

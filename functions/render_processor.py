@@ -1,9 +1,7 @@
 import cv2 as cv
 import numpy as np
-import os
 
-def export_video_global(frames, output_path, fps):
-    """🚀 Global function to export ANY list of frames as video"""
+def renderProcessor(frames, output_path, fps):
     if not frames:
         print("❌ No frames to export!")
         return False
