@@ -27,5 +27,5 @@ High variance = Detailed, textured areas (complex effects)
 Dynamic Thresholding
 ```python
 self.threshold = np.median(self.complexities)
-Statistical Method: Uses median of recent frame complexities to adapt to different lighting conditions without being affected by outliers.
 ```
+Statistical Method: Uses median of recent frame complexities to adapt to different lighting conditions without being affected by outliers.
