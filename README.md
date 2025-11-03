@@ -24,11 +24,45 @@ Low variance = Flat, uniform areas (simple effects)
 
 High variance = Detailed, textured areas (complex effects)
 
-Dynamic Thresholding
+## Dynamic Thresholding
 ```python
 self.threshold = np.median(self.complexities)
 ```
 Statistical Method: Uses median of recent frame complexities to adapt to different lighting conditions without being affected by outliers.
+
+## Mixture of various mathematical concepts
+
+### Sine Distortion ( using vectorized product )
+
+```python
+def sine_distortion(self, frame, time, wave_strength=10):
+        h, w = frame.shape[:2]
+    
+        y_coords, x_coords = np.indices((h, w)) # vectorized here
+        
+        wave_x = np.sin(y_coords * 0.05 + time) * wave_strength
+        wave_y = np.cos(x_coords * 0.05 + time) * wave_strength
+        
+        new_x = np.clip(x_coords + wave_x, 0, w-1).astype(np.int32)
+        new_y = np.clip(y_coords + wave_y, 0, h-1).astype(np.int32)
+        
+        return frame[new_y, new_x]
+```
+
+### Hue Shifting
+```python
+def hue_shift(self, frame, shift_amount):
+        hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
+
+        hue_channel = hsv[:, :, 0]
+        
+        hue_channel_int = hue_channel.astype(np.int32)
+        new_hue = (hue_channel_int + shift_amount) % 180
+        
+        hsv[:, :, 0] = new_hue.astype(np.uint8)
+
+        return cv.cvtColor(hsv, cv.COLOR_HSV2BGR)
+```
 
 ## 🚀 Installation
 In order to use the library, you need to clone the repository :
