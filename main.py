@@ -182,9 +182,9 @@ def renderVideo():
 
 # ---------------------- Parsing args below here ----------------------
 
-if args.rtm == "enable":
+if hasattr(args, "rtm") and args.rtm == "enable":
     realtimeManipulation()
-elif args.render == "enable":
+elif hasattr(args, "render") and args.render == "enable":
     renderVideo()
 else :
     print("Undefined argument!")
