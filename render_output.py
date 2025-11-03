@@ -1,6 +1,7 @@
 import cv2 as cv
 import numpy as np
 import time
+from datetime import datetime
 
 # Import classes
 from effects.calibrator import Calibrator
@@ -9,6 +10,7 @@ from functions.export_video import export_video_global
 
 VIDEO_PATH = 'assets/video_1_trimmed.mp4'
 AUDIO_FILE = 'assets/worldwide.wav'
+FILENAME = "video_" + str(datetime.now().strftime("%Y_%m_%d_%H_%M_%S")) + ".mp4"
 
 capture = cv.VideoCapture(VIDEO_PATH)
 calibrator = Calibrator()
@@ -60,9 +62,9 @@ if output_frames:
     total_time = time.time() - start_time
     print(f"✅ Processed {len(output_frames)} frames in {total_time:.2f}s")
     print(f"📹 Exporting at {len(output_frames)/total_time:.1f} fps...")
-    export_video_global(output_frames, "osamason.mp4", fps_cv)
-    print("🎬 Video exported: osamason.mp4")
+    export_video_global(output_frames, "build/" + FILENAME, fps_cv)
+    print("🎬 Video exported: " + FILENAME)
 else:
     print("❌ No frames processed!")
 
-print("🎉 Done! Open osamason.mp4 to see your masterpiece!")
+print(f"🎉 Done! Open {FILENAME} to see your masterpiece!")
