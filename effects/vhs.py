@@ -1,5 +1,5 @@
 import cv2 as cv
-import os
+import random
 import sys
 import math
 import time
@@ -57,11 +57,11 @@ class VHS:
         h, w = r.shape
 
         for i in range(h):
-            shift = 512 + int(np.sin(i * 0.01) * 2) 
+            shift = 5 + int(np.sin(i * 0.01) * 2)
             r[i] = np.roll(r[i], shift)
         
             if i % 3 == 0:
-                b[i] = np.roll(b[i], -2)
+                b[i] = np.roll(b[i], -3)
     
         return cv.merge([b, g, r])
 
