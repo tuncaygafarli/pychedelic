@@ -48,7 +48,7 @@ def realtimeManipulation(args):
                 cv.putText(frame, "COMPLEXITY : " + str(round(complexity, 2)), (50, 150), 
                     cv.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                 cv.putText(frame, "PSYCHEDELIC EFFECT", (50, 300), 
-                    cv.FONT_HERSHEY_SIMPLEX, 1, (255, 128, 0), 2)
+                    cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
                 
                 if complexity > cc_manipulator.threshold :
                     cv.putText(frame, "CALIBRATED FRAME", (50, 200), 
@@ -100,7 +100,7 @@ def realtimeManipulation(args):
                 cv.putText(frame, "COMPLEXITY : " + str(round(complexity, 2)), (50, 150), 
                     cv.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                 cv.putText(frame, "VHS EFFECT", (50, 300), 
-                    cv.FONT_HERSHEY_SIMPLEX, 1, (255, 128, 0), 2)
+                    cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
                 
                 if complexity > vhs.threshold :
                     cv.putText(frame, "CALIBRATED FRAME", (50, 200), 

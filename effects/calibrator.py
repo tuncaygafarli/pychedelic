@@ -47,5 +47,8 @@ class Calibrator:
         return cv.addWeighted(frame, 0.5, edges_bgr, 0.5, 0)
     
     def _simple_frame_effect(self, frame, complexity):
-        alpha = 1.0 + math.sqrt((self.complexities.index(complexity)))
-        return cv.convertScaleAbs(frame, alpha=1.8, beta=10)
+        blurred = cv.GaussianBlur(frame, (5, 5), 0)
+        edges = cv.Canny(blurred, 50, 150)
+
+        edges_bgr = cv.cvtColor(edges, cv.COLOR_GRAY2BGR)
+        return cv.addWeighted(frame, 0.5, edges_bgr, 0.5, 0)
