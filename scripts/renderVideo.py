@@ -46,27 +46,27 @@ def renderVideo(args):
             fps = frame_count / elapsed if elapsed > 0 else 0
             print(f"📊 Processed {frame_count} frames ({fps:.1f} fps)")
         
-        if hasattr(args, "effects") and "Calibrator" in args.effects:
-            complexity = calibrator.calculate_complexity(frame)
+        if hasattr(args, "effects"):
+            if "Calibrator" in args.effects:
+                complexity = calibrator.calculate_complexity(frame)
 
-            calibrator.add_frame(frame)
-            processed_calibrator_frame = calibrator.process_current_frame(frame)
-            output_frames.append(processed_calibrator_frame)
+                calibrator.add_frame(frame)
+                processed_calibrator_frame = calibrator.process_current_frame(frame)
+                output_frames.append(processed_calibrator_frame)
             
-        if hasattr(args, "effects") and "ColorChaosManipulator" in args.effects:
-            complexity = cc_manipulator.calculate_complexity(frame)
+            elif "ColorChaosManipulator" in args.effects:
+                complexity = cc_manipulator.calculate_complexity(frame)
 
-            cc_manipulator.add_frame(frame)
-            processed_cc_manipulator_frame = cc_manipulator.process_current_frame(frame, complexity)
-            output_frames.append(processed_cc_manipulator_frame)
+                cc_manipulator.add_frame(frame)
+                processed_cc_manipulator_frame = cc_manipulator.process_current_frame(frame, complexity)
+                output_frames.append(processed_cc_manipulator_frame)
 
-        if hasattr(args, "effects") and "VHS" in args.effects:
-            complexity = vhs.calculate_complexity(frame)
+            elif "VHS" in args.effects:
+                complexity = vhs.calculate_complexity(frame)
 
-            vhs.add_frame(frame)
-            processed_vhs_frame = vhs.process_current_frame(frame, complexity)
-            output_frames.append(processed_vhs_frame)
-            
+                vhs.add_frame(frame)
+                processed_vhs_frame = vhs.process_current_frame(frame, complexity)
+                output_frames.append(processed_vhs_frame)
         else:
             print("Undefined argument.")
             break
