@@ -89,6 +89,8 @@ _Process video files with live preview and real-time effects!_
 ## Gallery
 
 ![mvclip_channel_shift](https://github.com/user-attachments/assets/b210cc5a-a4c0-4dee-8695-673045d5bc4d) ![artifact_color_chaos (1)](https://github.com/user-attachments/assets/6edd7aa5-6124-4fba-ac6e-70fd887293e6)
+![video_2025_11_06_02_15_01](https://github.com/user-attachments/assets/cb2ca4e8-53b9-43b3-a19e-91ae09b55d49)
+
 
 ### Video Rendering & Export
 ```bash
