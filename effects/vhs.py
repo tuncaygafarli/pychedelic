@@ -28,7 +28,7 @@ class VHS:
         self.complexities.append(complexity)
 
         if len(self.complexities) > 10 and self.threshold == None:
-            self.threshold = np.median(self.complexities)
+            self.threshold = np.mean(self.complexities)
             print("Current VHS threshold has set to " + str(self.threshold))
 
     def process_current_frame(self, frame, complexity):
@@ -61,7 +61,7 @@ class VHS:
             r[i] = np.roll(r[i], shift)
         
             if i % 3 == 0:
-                b[i] = np.roll(b[i], -3)
+                b[i] = np.roll(b[i], -2)
     
         return cv.merge([b, g, r])
     

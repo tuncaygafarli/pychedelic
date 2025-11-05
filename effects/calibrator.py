@@ -18,7 +18,7 @@ class Calibrator:
         self.complexities.append(complexity)
 
         if len(self.complexities) > 10 and self.threshold == None:
-            self.threshold = np.median(self.complexities)
+            self.threshold = np.mean(self.complexities)
             print("Current Calibrator threshold has set to " + str(self.threshold))
 
     def calculate_complexity(self, frame):
@@ -42,8 +42,18 @@ class Calibrator:
             return self._simple_frame_effect(frame, complexity)
 
     def _complex_frame_effect(self, frame, complexity):
-        edges = cv.Canny(frame, 100, 200)
-        edges_bgr = cv.cvtColor(edges, cv.COLOR_GRAY2BGR)
+        edges = cv.Canny(frame, 50, 150)
+
+        h, w = edges.shape[:2]
+
+        edges_rgb = cv.cvtColor(edges, cv.COLOR_GRAY2RGB)
+        r_channel = random.randint(0, 255)
+        g_channel = random.randint(0, 255)
+        b_channel = random.randint(0, 255)
+
+        edges_rgb[edges > 0] = [r_channel, g_channel, b_channel]
+
+        edges_bgr = cv.cvtColor(edges_rgb, cv.COLOR_RGB2BGR)
         return cv.addWeighted(frame, 0.5, edges_bgr, 0.5, 0)
     
     def _simple_frame_effect(self, frame, complexity):

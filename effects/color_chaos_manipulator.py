@@ -43,7 +43,7 @@ class ColorChaosManipulator:
         self.complexities.append(complexity)
 
         if len(self.complexities) > 10 and self.threshold == None:
-            self.threshold = np.median(self.complexities)
+            self.threshold = np.mean(self.complexities)
             print("Current ColorChaosManipulator threshold has set to " + str(self.threshold))
 
     def process_current_frame(self, frame, complexity):
@@ -167,7 +167,7 @@ class ColorChaosManipulator:
         shift_amount = int(math.sin(time_counter * 0.1) * 30)
         result = self.hue_shift(result, shift_amount) 
         
-        wave_strength = 5 + 3 * math.sin(time_counter * 0.05) 
+        wave_strength = 5 + 3 * math.sin(time_counter * 0.03) 
         result = self.sine_distortion(result, time_counter * 0.5)
         
         split_amount = int(2 + math.sin(time_counter * 0.2) * 3) 
