@@ -41,9 +41,9 @@ class VHS:
         self.processed_frames.append(frame)  
         
         if complexity > self.threshold:
-            return self._apply_vhs(frame)
+            return self._apply_vhs_complex(frame)
         else:
-            return self._vhs_scan_lines(frame)
+            return self._apply_vhs_simple(frame)
         
 
     def _vhs_scan_lines(self, frame):
@@ -110,10 +110,16 @@ class VHS:
         
         return frame
 
-    def _apply_vhs(self, frame):
+    def _apply_vhs_complex(self, frame):
         frame = self._vhs_scan_lines(frame)
         frame = self._vhs_color_bleeding(frame)
         frame = self._vhs_noise(frame)
         frame = self._vhs_head_clog(frame)
+
+        return frame
+    
+    def _apply_vhs_simple(self, frame):
+        frame = self._vhs_scan_lines(frame)
+        frame = self._vhs_color_bleeding(frame)
 
         return frame  
