@@ -62,7 +62,7 @@ def renderVideo(args):
             if "Tracker" in args.effects:
                 effectManager.set_effect("tracker")
             
-            elif "ColorChaosManipulator" in args.effects:
+            elif "ColorChaos" in args.effects:
                 effectManager.set_effect("color_chaos")
 
             elif "VHS" in args.effects:

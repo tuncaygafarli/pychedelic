@@ -39,8 +39,8 @@ def realtimeManipulation(args):
     if hasattr(args, "effects"):
         if "Tracker" in args.effects:
             effectManager.set_effect("tracker")
-        elif "ColorChaosManipulator" in args.effects:
-            effectManager.set_effect("cc_manipulator")
+        elif "ColorChaos" in args.effects:
+            effectManager.set_effect("color_chaos")
         elif "VHS" in args.effects:
             effectManager.set_effect("vhs")
         elif "NightVision" in args.effects:

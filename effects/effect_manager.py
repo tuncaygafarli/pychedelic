@@ -13,7 +13,7 @@ class EffectManager:
     def __init__(self):
         self.effects = {
             "tracker" : Tracker(),
-            "cc_manipulator" : ColorChaosManipulator,
+            "color_chaos" : ColorChaosManipulator(),
             "vhs" : VHS(),
             "night_vision" : NightVision()
         }
