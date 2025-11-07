@@ -77,7 +77,7 @@ def renderVideo(args):
         active_effect.add_frame(frame)
 
         processed_frame = active_effect.process_current_frame(frame, complexity)
-        active_effect.processed_frames.append(processed_frame)
+        active_effect.processed_frames.append(processed_frame)  
 
     capture.release()
 

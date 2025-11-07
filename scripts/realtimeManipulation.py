@@ -93,8 +93,8 @@ def realtimeManipulation(args):
         FRAME_ORDER += 1
 
         key = cv.waitKey(10) & 0xFF
-        if key == ord('d'):
-            print("D key detected!")
+        if key == ord('q'):
+            print("Q key detected!")
             break
 
     cv.destroyAllWindows()

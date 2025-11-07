@@ -5,14 +5,18 @@ import time
 
 class AudioProcessor:
     
-    def __init__(self, audio_path):
+    def __init__(self, audio_path, effect):
         self.audio_path = audio_path
 
         self.tempo = 0
         self.beat_timestamps = []
         self.energy_history = []
 
-        self.frequency_bands = {}
+        self.frequency_bands = {
+            "bass" : 1.0,
+            "mid" : 1.0,
+            "high" : 1.0
+        }
         self.spectral_centroid = 0
 
         self.effect_multipliers = {
@@ -20,3 +24,12 @@ class AudioProcessor:
             'hue_shift': 1.0, 
             'sine_distortion': 1.0
         }
+
+    def _band_multiplication(self, effect, frame):
+        b, g, r = cv.split(frame)
+
+        processed_red_channel = effect.process_current_frame(r)
+
+        return cv.merge([b, g, processed_red_channel])
+                
+

@@ -33,3 +33,7 @@ class EffectManager:
     
     def get_active_effect(self):
         return self.active_effect
+    
+    def get_effect(self, effect_name):
+        effect = self.effects[effect_name]
+        return effect

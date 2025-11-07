@@ -6,8 +6,10 @@ import time
 class NightVision:
     def __init__(self):
         self.name = "NightVision Effect"
+
         self.frames = []
         self.processed_frames = []
+        
         self.complexities = []
         self.threshold = None
 
