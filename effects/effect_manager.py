@@ -7,7 +7,7 @@ from effects.color_chaos_manipulator import ColorChaosManipulator
 from effects.tracker import Tracker
 from effects.vhs import VHS
 from effects.night_vision import NightVision
-from effects.face_censor import FaceBlur
+from effects.facial_artifacts import FacialArtifacts
 
 class EffectManager:
 
@@ -17,7 +17,7 @@ class EffectManager:
             "color_chaos" : ColorChaosManipulator(),
             "vhs" : VHS(),
             "night_vision" : NightVision(),
-            "face_blur" : FaceBlur()
+            "face_blur" : FacialArtifacts()
         }
 
         self.active_effect = None

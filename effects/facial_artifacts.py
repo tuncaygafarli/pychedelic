@@ -1,0 +1,91 @@
+import cv2 as cv
+import numpy as np
+import time
+import math
+import random
+
+from processors.face_detection import FateDetector
+from effects.color_chaos_manipulator import ColorChaosManipulator
+
+faceDetector = FateDetector()
+color_chaos = ColorChaosManipulator()
+
+class FacialArtifacts:
+    
+    def __init__(self):
+        self.name = None
+
+        self.frames = []
+        self.processed_frames = []
+
+        self.complexities = []
+        self.threshold = None
+
+        self.start_time = time.time()
+
+    def add_frame(self, frame):
+        self.frames.append(frame)
+        complexity = self.calculate_complexity(frame)
+        self.complexities.append(complexity)
+
+        if len(self.complexities) > 10 and self.threshold == None:
+            self.threshold = np.mean(self.complexities)
+            print("Current FacialArtifact threshold has set to " + str(self.threshold))
+
+    def calculate_complexity(self, frame):
+        gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+        variance = np.var(gray)
+
+        return np.log1p(variance)
+
+    def blur(self, frame):
+        faces = faceDetector.detect(frame)
+        result_frame = frame.copy()
+
+        for (x,y,h,w) in faces:    
+            first_pixel = frame[y, x].copy()
+            #frame[y:y+h, x:x+w] = first_pixel
+            result_frame[y:y+h, x:x+w] = cv.blur(result_frame[y:y+h, x:x+w], ((20, 80)))
+
+        return result_frame
+    
+    def rgb_split(self, frame):
+        b, g, r = cv.split(frame)
+        g_shift = math.floor(5 * np.sin((self.start_time - time.time()) * 0.01 ))
+
+        shift = 10
+        b_shifted = np.roll(b, shift, axis=1)
+        g_shifted = np.roll(g, g_shift, axis=1)
+        r_shifted = np.roll(r, -shift, axis=1)
+
+        frame = cv.merge([b_shifted, g_shifted, r_shifted])
+        return frame
+    
+    def scan_face(self, frame):
+        faces = faceDetector.detect(frame)
+        result_frame = frame.copy()
+
+        for (x, y, h, w) in faces:
+            face_region = result_frame[y:y+h, x:x+w]
+                        
+            processed_face = self.rgb_split(face_region)
+            
+            result_frame[y:y+h, x:x+w] = processed_face
+
+        return result_frame
+    
+    def mark_face(self, frame):
+        faces = faceDetector.detect(frame)
+        result_frame = frame.copy()
+
+        for (x,y,h,w) in faces:     
+            cv.rectangle(result_frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+        return result_frame
+    
+    def process_current_frame(self, frame, complexity):
+        frame = self.mark_face(frame)
+
+        return frame
+
+    

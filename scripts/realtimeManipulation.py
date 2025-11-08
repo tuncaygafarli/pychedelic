@@ -89,7 +89,7 @@ def realtimeManipulation(args):
         cv.putText(processed_frame, f"EFFECT: {effectManager.effect_history[-1].name}", (50, 350), 
             cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
 
-        print("Processed frame number " + str(FRAME_ORDER))
+        #print("Processed frame number " + str(FRAME_ORDER))
         cv.imshow("PROCESSED VIDEO", processed_frame)
         FRAME_ORDER += 1
 
