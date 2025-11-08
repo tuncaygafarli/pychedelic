@@ -10,6 +10,6 @@ class FateDetector:
         self.face_cascade = cv.CascadeClassifier(cv.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
     def detect(self, frame):
-        faces = self.face_cascade.detectMultiScale(frame, 1.1, 4)
+        faces = self.face_cascade.detectMultiScale(frame, 1.1, 10, minSize=(60, 60))
 
         return faces

@@ -17,7 +17,7 @@ class EffectManager:
             "color_chaos" : ColorChaosManipulator(),
             "vhs" : VHS(),
             "night_vision" : NightVision(),
-            "face_blur" : FacialArtifacts()
+            "facial_artifacts" : FacialArtifacts()
         }
 
         self.active_effect = None

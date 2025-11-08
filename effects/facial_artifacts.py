@@ -74,6 +74,19 @@ class FacialArtifacts:
 
         return result_frame
     
+    def psychedelic_face_shift(self, frame):
+        self.name = "Pixel brightness invertion"
+        faces = faceDetector.detect(frame)
+        result_frame = frame.copy()
+
+        for (x, y, h, w) in faces:
+            shift_amount = 3 + 5 * np.sin(time.time() - self.start_time * 0.01)
+            result_frame[y:y+h, x:x+w] = result_frame[y:y+h, x:x+w] * shift_amount
+
+            result_frame[y:y+h, x:x+w] = np.roll(result_frame[y:y+h, x:x+w], shift_amount, axis = 1)
+
+        return result_frame
+    
     def mark_face(self, frame):
         faces = faceDetector.detect(frame)
         result_frame = frame.copy()
@@ -84,7 +97,7 @@ class FacialArtifacts:
         return result_frame
     
     def process_current_frame(self, frame, complexity):
-        frame = self.mark_face(frame)
+        frame = self.psychedelic_face_shift(frame)
 
         return frame
 

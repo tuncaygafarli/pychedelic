@@ -39,8 +39,8 @@ def webcamManipulation(args):
             effectManager.set_effect("vhs")
         elif "NightVision" in args.effects:
             effectManager.set_effect("night_vision")
-        elif "FaceBlur" in args.effects:
-            effectManager.set_effect("face_blur")
+        elif "FacialArtifacts" in args.effects:
+            effectManager.set_effect("facial_artifacts")
         else:
             print("No effect specified!")
             return
