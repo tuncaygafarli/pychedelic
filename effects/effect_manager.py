@@ -8,7 +8,7 @@ from effects.tracker import Tracker
 from effects.vhs import VHS
 from effects.night_vision import NightVision
 from effects.facial_artifacts import FacialArtifacts
-from effects.chrome_aberration import ChromeAberration
+from effects.chromatic_aberration import ChromeAberration
 
 class EffectManager:
 
