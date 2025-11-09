@@ -24,7 +24,17 @@ class EffectManager:
             "none" : NoneEffect()
         }
 
+        self.effect_functions = {
+            "facial_artifacts" : {
+                "blur_face",
+                "blur_eyes",
+                "psychedelic_face_shift",
+                "psychedelic_eye_shift"
+            }
+        }
+
         self.active_effect = None
+        self.active_effect_function = None
         self.effect_history = []
 
     def set_effect(self, effect_name):

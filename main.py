@@ -33,6 +33,7 @@ parser = argparse.ArgumentParser(description="OpenCV Visual Artifacts - Transfor
 parser.add_argument(
     "-mode", "--mode", 
     type=str,
+    required=True,
     choices=['render','rtm','webcam'],
     help="Sets the mode to specified argument"
 )
@@ -40,6 +41,7 @@ parser.add_argument(
 parser.add_argument(
     "-effects", "--effects", 
     nargs='+',
+    required=True,
     choices=['Tracker','ColorChaos', 'VHS',"NightVision",'FacialArtifacts','ChromaticAberration','None'], 
     help="Chooses effects to be applied"
 )

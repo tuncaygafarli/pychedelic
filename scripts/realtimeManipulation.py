@@ -46,7 +46,7 @@ def realtimeManipulation(args):
         elif "NightVision" in args.effects:
             effectManager.set_effect("night_vision")
         elif "FacialArtifacts" in args.effects:
-            effectManager.set_effect("facial_artifacts")
+            effectManager.set_effect("facial_artifacts", args.effects[1])
         elif "ChromaticAberration" in args.effects:
             effectManager.set_effect("chromatic_aberration")
         elif "None" in args.effects:
