@@ -23,6 +23,8 @@ class FacialArtifacts:
 
         self.start_time = time.time()
 
+        self.stored_image_path = None
+
     def add_frame(self, frame):
         self.frames.append(frame)
         complexity = self.calculate_complexity(frame)
@@ -110,13 +112,47 @@ class FacialArtifacts:
         return result_frame
     
     def mark_face(self, frame):
-        faces = faceDetector.detect(frame)
+        faces = faceDetector.detect_face(frame)
         result_frame = frame.copy()
 
         for (x,y,h,w) in faces:     
             cv.rectangle(result_frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
         return result_frame
+    
+    def face_filter(self, frame):
+        faces = faceDetector.detect_face(frame)
+        result_frame = frame.copy()
+        
+        if self.stored_image_path is None:
+            self.stored_image_path = input("Enter image name to combine with: ")
+
+        for (x,y,h,w) in faces:
+            try :  
+                extensions = ['.jpg', '.jpeg', '.png', '.bmp', '.webp']
+
+                for ext in extensions:
+                    img_path = f"assets/{self.stored_image_path}{ext}"
+                    img = cv.imread(img_path)
+                    if img is not None:
+                        break
+                
+                if img is None:
+                    print(f"Error: Could not load image {self.stored_image_path} with any common extension")
+                    continue   
+                img_resized = cv.resize(img, (w, h))
+
+                region = result_frame[y:y+h, x:x+w]
+                blended_region = cv.addWeighted(region, 0, img_resized, 1, 0)
+
+                result_frame[y:y+h, x:x+w] = blended_region
+                
+            except Exception as e:
+                print(f"Error applying face filter: {e}")
+                continue
+
+        return result_frame
+        
     
     def process_current_frame(self, frame, complexity):
         frame = self.blur_face(frame)

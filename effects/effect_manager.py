@@ -35,18 +35,28 @@ class EffectManager:
                 "vhs_scan_lines","vhs_color_bleeding","vhs_noise","vhs_head_clog","vhs_tape_damage","vhs_tape_glitch","vhs_barrel_distortion"
                 ],
             "FacialArtifacts" : [
-                "blur_face","blur_eyes","psychedelic_face_shift","psychedelic_eye_shift"
+                "mark_face","blur_face","blur_eyes","psychedelic_face_shift","psychedelic_eye_shift","face_filter"
                 ],
-            "NightVision" : 
-            ["night_vision_overlay","night_vision_scan_lines","night_vision_barrel_distortion"
-             ],
+            "NightVision" : [
+                "night_vision_overlay","night_vision_scan_lines","night_vision_barrel_distortion"
+                ],
             "Grunge" : [
                 "grunge_bleach_bypass","emo_bloom_effect","washed_emo_layers","burnify"
                 ],
             "ChromaticAberration" : []
         }
 
-        self.active_functions = ["channel_swap","color_blast","hue_shift","sine_distortion","rgb_split","channel_shifting","kaleidoscope","blur_face","blur_eyes","psychedelic_face_shift","psychedelic_eye_shift","vhs_scan_lines","vhs_color_bleeding","vhs_noise","vhs_head_clog","vhs_tape_damage","vhs_tape_glitch","barrel_distortion","night_vision_overlay","night_vision_scan_lines","night_vision_barrel_distortion","grunge_bleach_bypass","emo_bloom_effect","washed_emo_layers","burnify"]
+        self.active_functions = [
+            "channel_swap","color_blast","hue_shift","sine_distortion","rgb_split","channel_shifting","kaleidoscope",
+
+            "blur_face","blur_eyes","psychedelic_face_shift","psychedelic_eye_shift","mark_face","face_filter",
+
+            "vhs_scan_lines","vhs_color_bleeding","vhs_noise","vhs_head_clog","vhs_tape_damage","vhs_tape_glitch","vhs_barrel_distortion",
+
+            "night_vision_overlay","night_vision_scan_lines","night_vision_barrel_distortion",
+
+            "grunge_bleach_bypass","emo_bloom_effect","washed_emo_layers","burnify"
+        ]
 
         self.active_effect = None
         self.active_effect_function = None
