@@ -55,12 +55,12 @@ class ColorChaosManipulator:
         if self.threshold is None:  
             cv.putText(frame, "CALIBRATING...", (50, 50), 
                   cv.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-            return frame 
+            return frame
                      
         if complexity > self.threshold:
             return self._complex_frame_effect(frame, complexity)
         else:
-            return self.hue_shift(frame, 50)
+            return self.hue_shift(frame)
         
     def _complex_frame_effect(self, frame, complexity):
         effect_type = random.choice([
@@ -141,28 +141,40 @@ class ColorChaosManipulator:
     
         return cv.merge([b, g, r])
     
-    def kaleidoscope(self, frame, num_segments=6): # also study this part too, why not to vectorize segments in order to process frames???
+    def kaleidoscope(self, frame, num_segments=6):
         h, w = frame.shape[:2]
         center_x, center_y = w // 2, h // 2
-
-        result = np.zeros_like(frame)
-
-        angle_step = 360 // num_segments
-
-        for segment in range(num_segments):
-            angle = segment * angle_step
-
-            rotation_matrix = cv.getRotationMatrix2D((center_x, center_y), angle, 1.0)
-            rotated = cv.warpAffine(frame, rotation_matrix, (w, h))
-
-            mask = np.zeros((h,w), dtype=np.uint8)
-            start_angle = -angle_step // 2
-            end_angle = angle_step // 2
-
-            cv.ellipse(mask, (center_x, center_y), (w, h), 
-                  start_angle, 0, end_angle, 255, -1)
+        radius = min(center_x, center_y)
         
-            result[mask == 255] = rotated[mask == 255]
+        y, x = np.ogrid[:h, :w]
+        
+        dx = x - center_x
+        dy = y - center_y
+        r = np.sqrt(dx**2 + dy**2)
+        theta = np.arctan2(dy, dx) * 180 / np.pi  
+        theta = (theta + 360) % 360 
+        
+        circle_mask = r <= radius
+        
+        angle_step = 360.0 / num_segments
+        normalized_theta = theta % angle_step
+        
+        source_theta = np.where(normalized_theta <= angle_step / 2, 
+                            normalized_theta, 
+                            angle_step - normalized_theta)
+        
+        source_theta = source_theta + (theta // angle_step) * angle_step
+        
+        source_theta_rad = source_theta * np.pi / 180
+        source_x = (r * np.cos(source_theta_rad) + center_x).astype(int)
+        source_y = (r * np.sin(source_theta_rad) + center_y).astype(int)
+        
+        source_x = np.clip(source_x, 0, w-1)
+        source_y = np.clip(source_y, 0, h-1)
+        
+        result = np.zeros_like(frame)
+        result[circle_mask] = frame[source_y[circle_mask], source_x[circle_mask]]
+        
         return result
     
     def psychedelic_master(self, frame, time_counter):
@@ -177,7 +189,7 @@ class ColorChaosManipulator:
         result = self.rgb_split(result, split_amount)
 
         if random.random() < 0.1:
-            result = self._channel_shifting(result)
+            result = self.channel_shifting(result)
         
         if int(time_counter) % 120 == 0: 
             segments = random.choice([4, 6, 8])
