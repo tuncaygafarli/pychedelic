@@ -166,5 +166,3 @@ class FacialArtifacts:
         frame = self.psychedelic_eye_shift(frame)
 
         return frame
-
-    
