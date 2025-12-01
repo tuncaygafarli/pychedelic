@@ -25,11 +25,9 @@ class AudioProcessor:
             'sine_distortion': 1.0
         }
 
-    def _band_multiplication(self, effect, frame):
-        b, g, r = cv.split(frame)
-
-        processed_red_channel = effect.process_current_frame(r)
-
-        return cv.merge([b, g, processed_red_channel])
+    def band_multiplication(self, frame, frequency_band, intensity):
+            if frequency_band == "bass":
+                return np.clip(frame * self.frequency_bands["bass"], 0, 255, None)
+        
                 
 
