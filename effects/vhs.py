@@ -5,6 +5,10 @@ import math
 import time
 import numpy as np
 
+from helpers.helpers import Helpers
+
+helpers = Helpers()
+
 class VHS:
     
     def __init__(self):
@@ -22,7 +26,14 @@ class VHS:
         gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
         variance = np.var(gray)
 
-        return np.log1p(variance)
+        edges = cv.Canny(gray, 50, 150)
+        edge_density = np.sum(edges > 0) / edges.size
+    
+        brightness_std = np.std(gray) / 255.0
+
+        complexity = np.log1p(variance) * 0.5 + edge_density * 0.3 + brightness_std * 0.2
+
+        return complexity
     
     def add_frame(self, frame):
         self.frames.append(frame)
@@ -31,21 +42,18 @@ class VHS:
 
         if len(self.complexities) > 10 and self.threshold == None:
             self.threshold = np.mean(self.complexities)
-            print("Current VHS threshold has set to " + str(self.threshold))
+            print(f"Current {self.name} threshold has set to " + str(self.threshold))
 
     def process_current_frame(self, frame, complexity):
         if self.threshold is None:  
             cv.putText(frame, "CALIBRATING...", (50, 50), 
                   cv.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
             return frame 
-        
-        
-        frame = self.vhs_barrel_distortion(frame, 0.1)
            
         if complexity > self.threshold:
-            return self.apply_vhs_complex(frame)
+            return self.apply_vhs_complex(frame, complexity)
         else:
-            return self.apply_vhs_simple(frame)
+            return self.apply_vhs_simple(frame, complexity)
         
     # <-------------------- VHS Scan Lines -------------------->
 
@@ -137,7 +145,7 @@ class VHS:
     
     # <-------------------- VHS Barrel Distortion -------------------->
     
-    def vhs_barrel_distortion(self, frame, intensity=0.1):
+    def vhs_barrel_distortion(self, frame, intensity=None):
         h, w = frame.shape[:2]
 
         j, i = np.meshgrid(np.arange(w), np.arange(h))
@@ -146,7 +154,13 @@ class VHS:
         y = ( i - h/2 ) / (h/2)
 
         r = np.sqrt(x*x + y*y)
-        distortion = 1.0 + intensity * r**2
+
+        if self.complexities[len(self.complexities) - 1] > self.threshold :
+            intensity = helpers.sigmoid_normalize(self.complexities[len(self.complexities) - 1])
+            distortion = 1.0 + intensity * np.sin(time.time() - self.start_time * 0.01) * r**2
+        else :
+            intensity = math.sqrt(helpers.sigmoid_normalize(0.1))
+            distortion = 1.0 + intensity * np.sin(time.time() - self.start_time * 0.01) * r**2
 
         x_distorted = x * distortion
         y_distorted = y * distortion
@@ -162,6 +176,7 @@ class VHS:
         frame = self.vhs_scan_lines(frame)
         frame = self.vhs_color_bleeding(frame)
         frame = self.vhs_head_clog(frame)
+        frame = self.vhs_barrel_distortion(frame)
 
         if random.random() < 0.000000000000005:
             frame = self.vhs_tape_damage(frame)

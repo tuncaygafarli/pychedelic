@@ -22,14 +22,21 @@ class NightVision:
 
         if len(self.complexities) > 10 and self.threshold == None:
             self.threshold = np.mean(self.complexities)
-            print("Current NightVision threshold has set to " + str(self.threshold))
+            print(f"Current {self.name} threshold has set to " + str(self.threshold))
 
     def calculate_complexity(self, frame):
         gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
         variance = np.var(gray)
 
-        return np.log1p(variance)
+        edges = cv.Canny(gray, 50, 150)
+        edge_density = np.sum(edges > 0) / edges.size
+    
+        brightness_std = np.std(gray) / 255.0
 
+        complexity = np.log1p(variance) * 0.5 + edge_density * 0.3 + brightness_std * 0.2
+
+        return complexity
+    
     def process_current_frame(self, frame, complexity):
         if self.threshold is None:  
             cv.putText(frame, "CALIBRATING...", (50, 50), 
