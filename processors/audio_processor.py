@@ -1,16 +1,17 @@
 import cv2 as cv
-import math
 import numpy as np
-import time
 
 class AudioProcessor:
     
-    def __init__(self, audio_path, effect):
+    def __init__(self, audio_path, sample_rate=44100, buffer_size=1024):
         self.audio_path = audio_path
 
         self.tempo = 0
         self.beat_timestamps = []
         self.energy_history = []
+
+        self.sample_rate = sample_rate
+        self.buffer_size = buffer_size
 
         self.frequency_bands = {
             "bass" : 1.0,
@@ -18,7 +19,7 @@ class AudioProcessor:
             "high" : 1.0
         }
         self.spectral_centroid = 0
-
+    
         self.effect_multipliers = {
             'color_blast': 3.0,
             'hue_shift': 1.0, 
