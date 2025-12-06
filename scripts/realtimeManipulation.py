@@ -114,8 +114,11 @@ def realtimeManipulation(args):
         if key == ord('q'):
             print("Q key detected!")
             break
-        if key == ord('d'):
+        if key == ord('s'):
             effectManager.toggled = not effectManager.toggled
+            continue
+        if key == ord('d'):
+            args.debug = not args.debug
             continue
 
     cv.destroyAllWindows()
