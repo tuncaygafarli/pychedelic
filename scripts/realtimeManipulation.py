@@ -66,7 +66,8 @@ def realtimeManipulation(args):
         ret, frame = capture.read()
 
         if not ret:
-            break
+            capture.set(cv.CAP_PROP_POS_FRAMES, 0)
+            continue
 
         active_effect = effectManager.get_active_effect()
 
@@ -109,9 +110,13 @@ def realtimeManipulation(args):
         FRAME_ORDER += 1
 
         key = cv.waitKey(10) & 0xFF
+
         if key == ord('q'):
             print("Q key detected!")
             break
+        if key == ord('d'):
+            effectManager.toggled = not effectManager.toggled
+            continue
 
     cv.destroyAllWindows()
         

@@ -26,38 +26,6 @@ class EffectManager:
             "none" : NoneEffect()
         }
 
-        self.effects_functions = {
-            "Tracker" : [],
-            "ColorChaos" : [
-                "channel_swap","color_blast","hue_shift","sine_distortion","rgb_split","channel_shifting","kaleidoscope"
-                ],
-            "VHS" : [
-                "vhs_scan_lines","vhs_color_bleeding","vhs_noise","vhs_head_clog","vhs_tape_damage","vhs_tape_glitch","vhs_barrel_distortion"
-                ],
-            "FacialArtifacts" : [
-                "mark_face","blur_face","blur_eyes","psychedelic_face_shift","psychedelic_eye_shift","face_filter"
-                ],
-            "NightVision" : [
-                "night_vision_overlay","night_vision_scan_lines","night_vision_barrel_distortion"
-                ],
-            "Grunge" : [
-                "grunge_bleach_bypass","emo_bloom_effect","washed_emo_layers","burnify"
-                ],
-            "ChromaticAberration" : []
-        }
-
-        self.active_functions = [
-            "channel_swap","color_blast","hue_shift","sine_distortion","rgb_split","channel_shifting","kaleidoscope",
-
-            "blur_face","blur_eyes","psychedelic_face_shift","psychedelic_eye_shift","mark_face","face_filter",
-
-            "vhs_scan_lines","vhs_color_bleeding","vhs_noise","vhs_head_clog","vhs_tape_damage","vhs_tape_glitch","vhs_barrel_distortion",
-
-            "night_vision_overlay","night_vision_scan_lines","night_vision_barrel_distortion",
-
-            "grunge_bleach_bypass","emo_bloom_effect","washed_emo_layers","burnify"
-        ]
-
         self.active_effect = None
         self.active_effect_function = None
         self.effect_history = []
@@ -75,7 +43,7 @@ class EffectManager:
             return False
         
     def process_frame(self, frame, complexity, args):
-        if not self.active_effect:
+        if not self.active_effect or self.toggled == False:
             return frame
             
         result = frame.copy()
@@ -87,7 +55,6 @@ class EffectManager:
                         self.effect_functions_history.append(func_name)
                     method = getattr(self.active_effect, func_name)
                     result = method(result)
-                    #print(f"Called {func_name}()")
                 except AttributeError:
                     print(f"{func_name}() not found in {self.active_effect.__class__.__name__}")
                 except Exception as e:
