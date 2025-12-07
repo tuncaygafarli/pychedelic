@@ -1,7 +1,7 @@
 import math
 import numpy as np
 
-class Helpers:
+class Normalizer:
 
     """
     Defining some mathematical foundations from here 

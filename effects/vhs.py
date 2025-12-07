@@ -5,9 +5,9 @@ import math
 import time
 import numpy as np
 
-from helpers.helpers import Helpers
+from helpers.normalizers import Normalizer
 
-helpers = Helpers()
+normalizer = Normalizer()
 
 class VHS:
     
@@ -160,11 +160,11 @@ class VHS:
         r = np.sqrt(x*x + y*y)
 
         if self.complexities[len(self.complexities) - 1] > self.threshold :
-            intensity = helpers.perceptual_sigmoid(self.complexities[len(self.complexities) - 1], len(self.complexities) // 2, 'color', complexity)
+            intensity = normalizer.perceptual_sigmoid(self.complexities[len(self.complexities) - 1], len(self.complexities) // 2, 'color', complexity)
             distortion = 1.0 + intensity * np.sin(time.time() - self.start_time * 0.01) * r**2
 
         else :
-            intensity = helpers.perceptual_sigmoid(self.complexities[len(self.complexities) - 1], len(self.complexities) // 2, 'luminance', complexity)
+            intensity = normalizer.perceptual_sigmoid(self.complexities[len(self.complexities) - 1], len(self.complexities) // 2, 'luminance', complexity)
             distortion = 1.0 + intensity * np.sin(time.time() - self.start_time * 0.01) * r**2
 
         x_distorted = x * distortion
