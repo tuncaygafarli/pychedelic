@@ -1,5 +1,6 @@
 import cv2 as cv
 import numpy as np
+import inspect
 
 # ------------------- Import effects from here -------------------
 
@@ -26,11 +27,23 @@ class EffectManager:
             "none" : NoneEffect()
         }
 
+        self.effects_functions = {}
         self.active_effect = None
         self.active_effect_function = None
         self.effect_history = []
         self.effect_functions_history = []
         self.toggled = True
+
+        for effect_name, effect_instance in self.effects.items():
+            methods = inspect.getmembers(effect_instance, predicate=inspect.ismethod)
+            
+            method_names = [
+                method[0] for method in methods 
+                if not method[0].startswith('__') and not method[0].endswith('__')
+            ]
+            
+            self.effects_functions[effect_name] = method_names
+
 
     def set_effect(self, effect_name):
         if effect_name in self.effects:
