@@ -99,13 +99,12 @@ def webcamManipulation(args):
             print("Q key detected!")
             break
         
-        if key == ord("w"):
-            if effectManager.toggled:
-                effectManager.set_effect("none")
-                effectManager.toggled = False
-            else :
-                effectManager.set_effect(effectManager.effect_history[-1])
-                effectManager.toggled = True
+        if key == ord('s'):
+            effectManager.toggled = not effectManager.toggled
+            continue
+        if key == ord('d'):
+            args.debug = not args.debug
+            continue
 
     cv.destroyAllWindows()
         
