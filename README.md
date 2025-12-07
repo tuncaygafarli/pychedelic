@@ -27,11 +27,16 @@ def calculate_complexity(self, frame):
         return complexity
 ```
 
-Mathematical Basis: Uses variance (σ²) to measure how "busy" a scene is:
-
-Low variance = Flat, uniform areas (simple effects)
-
-High variance = Detailed, textured areas (complex effects)
+Calculate scene complexity score based on image statistical properties.
+    
+    Mathematical Basis: Uses variance (σ²) to measure scene "busyness":
+    - Low variance = Flat, uniform areas (simple effects)
+    - High variance = Detailed, textured areas (complex effects)
+    
+    The complexity score combines three components:
+    1. Logarithmic variance term (dominant)
+    2. Edge density from Canny edge detection
+    3. Normalized brightness standard deviation
 
 ## Dynamic Thresholding
 ```python
