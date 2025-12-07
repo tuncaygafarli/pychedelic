@@ -145,7 +145,11 @@ class VHS:
     
     # <-------------------- VHS Barrel Distortion -------------------->
     
-    def vhs_barrel_distortion(self, frame, intensity=None):
+    def vhs_barrel_distortion(self, frame, complexity=None, intensity=None):
+
+        if complexity is None:
+            complexity = self.calculate_complexity(frame)
+
         h, w = frame.shape[:2]
 
         j, i = np.meshgrid(np.arange(w), np.arange(h))
@@ -156,10 +160,11 @@ class VHS:
         r = np.sqrt(x*x + y*y)
 
         if self.complexities[len(self.complexities) - 1] > self.threshold :
-            intensity = helpers.sigmoid_normalize(self.complexities[len(self.complexities) - 1])
+            intensity = helpers.perceptual_sigmoid(self.complexities[len(self.complexities) - 1], len(self.complexities) // 2, 'color', complexity)
             distortion = 1.0 + intensity * np.sin(time.time() - self.start_time * 0.01) * r**2
+
         else :
-            intensity = math.sqrt(helpers.sigmoid_normalize(0.1))
+            intensity = helpers.perceptual_sigmoid(self.complexities[len(self.complexities) - 1], len(self.complexities) // 2, 'luminance', complexity)
             distortion = 1.0 + intensity * np.sin(time.time() - self.start_time * 0.01) * r**2
 
         x_distorted = x * distortion
@@ -172,11 +177,11 @@ class VHS:
     
     # <-------------------- Dynamic Threshold Functions -------------------->
 
-    def apply_vhs_complex(self, frame):
+    def apply_vhs_complex(self, frame, complexity):
         frame = self.vhs_scan_lines(frame)
         frame = self.vhs_color_bleeding(frame)
         frame = self.vhs_head_clog(frame)
-        frame = self.vhs_barrel_distortion(frame)
+        frame = self.vhs_barrel_distortion(frame, complexity)
 
         if random.random() < 0.000000000000005:
             frame = self.vhs_tape_damage(frame)
