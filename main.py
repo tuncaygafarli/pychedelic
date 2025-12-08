@@ -9,11 +9,11 @@ from effects.tracker import Tracker
 from effects.color_chaos_manipulator import ColorChaosManipulator
 from processors.render_processor import RenderProcessor
 
-from scripts.renderVideo import renderVideo
-from scripts.realtimeManipulation import realtimeManipulation
-from scripts.webcamManipulation import webcamManipulation
-from scripts.listEffects import listEffects
-from scripts.listFunctions import listFunctions
+from scripts.video_renderer import videoRenderer
+from scripts.realtime_filter import realtimeFilter
+from scripts.webcam_filter import webcamFilter
+from scripts.effect_lister import listEffects
+from scripts.function_lister import listFunctions
 
 # ---------------------- Argument parser implementation below here ----------------------
 
@@ -68,11 +68,11 @@ parser.add_argument(
 args = parser.parse_args()
 
 if hasattr(args, "mode") and args.mode == "rtm":
-    realtimeManipulation(args)
+    realtimeFilter(args)
 elif hasattr(args, "mode") and args.mode == "render":
-    renderVideo(args)
+    videoRenderer(args)
 elif hasattr(args, "mode") and args.mode == "webcam":
-    webcamManipulation(args)
+    webcamFilter(args)
 elif hasattr(args, "list") and args.list == "effects":
     listEffects(args)
 elif hasattr(args, "list") and args.list == "functions":

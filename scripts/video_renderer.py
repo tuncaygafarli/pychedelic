@@ -12,7 +12,7 @@ from effects.effect_manager import EffectManager
 
 from processors.render_processor import RenderProcessor
 
-def renderVideo(args):
+def videoRenderer(args):
     # ------------------- Initialize file from here -------------------
 
     ASSETS_PATH = 'assets/'
