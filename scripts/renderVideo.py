@@ -30,6 +30,12 @@ def renderVideo(args):
     # ------------------- Initialize processors from here -------------------
     renderProcessor = RenderProcessor()
 
+    if hasattr(args, "effects") and args.effects:
+        effectManager.set_effect(args.effects[0])
+    else:
+        print("No effects specified, using 'None' effect.")
+        effectManager.effect_history.append("None")
+
     print("⚡ Processing frames at MAXIMUM SPEED (no display)...")
 
     frame_count = 0
@@ -50,20 +56,22 @@ def renderVideo(args):
             fps = frame_count / elapsed if elapsed > 0 else 0
             print(f"📊 Processed {frame_count} frames ({fps:.1f} fps)")
         
-        if hasattr(args, "effects"):
-            effectManager.set_effect(args.effects[0])
-        else:
-            print("Undefined argument.")
-            break
-         
-        active_effect = effectManager.get_active_effect()
-        elapsed_time = time.time() - active_effect.start_time
 
-        complexity = active_effect.calculate_complexity(frame)
-        active_effect.add_frame(frame)
+        try :
+            active_effect = effectManager.get_active_effect()
+            elapsed_time = time.time() - active_effect.start_time
 
-        processed_frame = effectManager.process_frame(frame, complexity, args)
-        active_effect.processed_frames.append(processed_frame)
+            complexity = active_effect.calculate_complexity(frame)
+            active_effect.add_frame(frame)
+
+            processed_frame = effectManager.process_frame(frame, complexity, args)
+            active_effect.processed_frames.append(processed_frame)
+        except Exception as error:
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            line_number = exc_traceback.tb_lineno
+
+            print(f"Error : {error} in line {line_number}")
+            
 
         # <--------------------- Debugging text from here --------------------->
         

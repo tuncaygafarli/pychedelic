@@ -53,7 +53,8 @@ class EffectManager:
 
             return True
         else:
-            print("Couldn't find effect!")
+            print(f"Couldn't find effect matching: {effect_name}!")
+            print(f"Available effects are: {list(self.effects.keys())}")
             return False
 
     def process_frame(self, frame, complexity, args):

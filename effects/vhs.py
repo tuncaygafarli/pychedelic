@@ -159,13 +159,7 @@ class VHS:
 
         r = np.sqrt(x*x + y*y)
 
-        if self.complexities[len(self.complexities) - 1] > self.threshold :
-            intensity = normalizer.perceptual_sigmoid(self.complexities[len(self.complexities) - 1], len(self.complexities) // 2, 'color', complexity)
-            distortion = 1.0 + intensity * np.sin(time.time() - self.start_time * 0.01) * r**2
-
-        else :
-            intensity = normalizer.perceptual_sigmoid(self.complexities[len(self.complexities) - 1], len(self.complexities) // 2, 'luminance', complexity)
-            distortion = 1.0 + intensity * np.sin(time.time() - self.start_time * 0.01) * r**2
+        distortion = 1.0 + intensity * r**2
 
         x_distorted = x * distortion
         y_distorted = y * distortion
