@@ -78,8 +78,9 @@ def realtimeManipulation(args):
 
             cv.putText(processed_frame, f"EFFECT: {effectManager.effect_history[-1].name}", (50, 350), 
                 cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
-    
-        cv.imshow("PROCESSED VIDEO", processed_frame)
+
+        cv.namedWindow('Resizable Window', cv.WINDOW_NORMAL)
+        cv.imshow("Resizable Window", processed_frame)
 
         key = cv.waitKey(10) & 0xFF
 
