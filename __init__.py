@@ -14,7 +14,6 @@ from . import effects
 from . import processors
 from . import utils
 
-# Define what gets imported with "from pychedelic import *"
 __all__ = [
     'EffectManager',
     'effects',
