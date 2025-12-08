@@ -9,10 +9,12 @@ from datetime import datetime
 from effects.effect_manager import EffectManager
 
 # ------------------- Importing functions from here -------------------
+
 from processors.render_processor import RenderProcessor
 
 def renderVideo(args):
     # ------------------- Initialize file from here -------------------
+
     ASSETS_PATH = 'assets/'
     FILENAME = "video_" + str(datetime.now().strftime("%Y_%m_%d_%H_%M_%S")) + ".mp4"
 
@@ -25,9 +27,11 @@ def renderVideo(args):
     capture = cv.VideoCapture(ASSETS_PATH + VIDEO_NAME_IO + ".mp4")
 
     # ------------------- Initialize managers from here -------------------
+
     effectManager = EffectManager()
 
     # ------------------- Initialize processors from here -------------------
+
     renderProcessor = RenderProcessor()
 
     if hasattr(args, "effects") and args.effects:
@@ -69,8 +73,9 @@ def renderVideo(args):
         except Exception as error:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             line_number = exc_traceback.tb_lineno
+            filename = exc_traceback.tb_frame.f_code.co_filename
 
-            print(f"Error : {error} in line {line_number}")
+            print(f"Error : {error} in file {os.path.basename(filename)} : line number {line_number}")
             
 
         # <--------------------- Debugging text from here --------------------->
