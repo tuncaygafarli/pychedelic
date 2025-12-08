@@ -29,7 +29,7 @@ class Grunge:
         complexity = self.calculate_complexity(frame)
         self.complexities.append(complexity)
 
-        if len(self.complexities) > 10 and self.threshold == None:
+        if len(self.complexities) > 10 and len(self.complexities) % 10 == 0 or self.threshold == None:
             self.threshold = np.mean(self.complexities)
             print(f"Current {self.name} threshold has set to " + str(self.threshold))
 
