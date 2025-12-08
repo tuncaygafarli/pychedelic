@@ -5,7 +5,7 @@ import math
 import time
 import numpy as np
 
-from helpers.normalizers import Normalizer
+from utils.normalizers import Normalizer
 
 normalizer = Normalizer()
 
