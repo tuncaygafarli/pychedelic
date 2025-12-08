@@ -34,8 +34,10 @@ def realtimeManipulation(args):
         print("Undefined argument.")
         return -1
         
+    cv.namedWindow('Video Feed', cv.WINDOW_NORMAL)
+    
     # <--------------------- Script loop from here --------------------->
-    #      
+
     while True:
         ret, frame = capture.read()
 
@@ -79,8 +81,7 @@ def realtimeManipulation(args):
             cv.putText(processed_frame, f"EFFECT: {effectManager.effect_history[-1].name}", (50, 350), 
                 cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
 
-        cv.namedWindow('Resizable Window', cv.WINDOW_NORMAL)
-        cv.imshow("Resizable Window", processed_frame)
+        cv.imshow("Video Feed", processed_frame)
 
         key = cv.waitKey(10) & 0xFF
 
