@@ -8,9 +8,9 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from effects.vhs import VHS
+from utils.normalizers import Normalizer
 
-vhs = VHS()
+normalizer = Normalizer()
 
 class Grunge:
     def __init__(self):
@@ -53,9 +53,9 @@ class Grunge:
             return frame 
         
         if complexity > self.threshold:
-            return self.grunge_master(frame)
+            return self.grunge_master_complex(frame, complexity)
         else:   
-            return self.grunge_master(frame)
+            return self.grunge_master_simple(frame, complexity)
 
     def grunge_bleach_bypass(self, frame):
         # High contrast + reduced saturation
@@ -108,9 +108,62 @@ class Grunge:
 
         return cv.merge([b_manipulated.astype(np.uint8), g_manipulated.astype(np.uint8), r_manipulated.astype(np.uint8)])
     
-    def grunge_master(self, frame):
+    def dreamify(self, frame, intensity=5):
+        result = frame.copy()
+        h, w = result.shape[:2]
+        
+        warm_tint = np.array([0.6, 0.8, 1.0])
+        result = result.astype(np.float32)
+        result[:,:,0] *= warm_tint[0]  # Less blue
+        result[:,:,1] *= warm_tint[1]  # Moderate green
+        result[:,:,2] *= warm_tint[2]  # More red
+        result = np.clip(result, 0, 255).astype(np.uint8)
+        
+        result = cv.GaussianBlur(result, (intensity, intensity), 3)
+        
+        vignette = np.ones((h, w), dtype=np.float32)
+        X, Y = np.ogrid[:h, :w]
+        center_x, center_y = h/2, w/2
+        radius = np.sqrt(center_x**2 + center_y**2)
+        dist = np.sqrt((X - center_x)**2 + (Y - center_y)**2)
+        vignette = 0.6 + 0.4 * (1 - (dist / radius)**2)
+        vignette = np.clip(vignette, 0.4, 1)
+        
+        for i in range(3):
+            result[:,:,i] = (result[:,:,i] * vignette).astype(np.uint8)
+        
+        noise = np.random.randn(h, w, 3) * intensity
+        result = result.astype(np.float32) + noise
+        result = np.clip(result, 0, 255).astype(np.uint8)
+        
+        return result
+
+    def grunge_master_complex(self, frame, complexity):
+        normalized_complexity = normalizer.perceptual_sigmoid(complexity, len(self.frames) // 2, 'texture', complexity)
+        raw_intensity = int(random.randint(1, 3) * normalized_complexity * 5)
+        intensity = max(1, min(10, raw_intensity))
+
+        if intensity % 2 == 0:
+            intensity += 1
+
         frame = self.grunge_bleach_bypass(frame)
         frame = self.washed_emo_layers(frame)
         frame = self.emo_bloom_effect(frame)
+        frame = self.dreamify(frame, intensity)
+
+        return frame
+    
+    def grunge_master_simple(self, frame, complexity):
+        normalized_complexity = normalizer.sigmoid_normalize(complexity)
+        raw_intensity = int(random.randint(1, 3) * normalized_complexity * 5)
+        intensity = max(1, min(10, raw_intensity))
+
+        if intensity % 2 == 0:
+            intensity += 1
+        
+        frame = self.grunge_bleach_bypass(frame)
+        frame = self.washed_emo_layers(frame)
+        frame = self.emo_bloom_effect(frame)
+        frame = self.dreamify(frame, intensity)
 
         return frame
