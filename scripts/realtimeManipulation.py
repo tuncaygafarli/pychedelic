@@ -8,6 +8,12 @@ from datetime import datetime
 
 from effects.effect_manager import EffectManager
 
+def is_window_open(window_name):
+    try:
+        status = cv.getWindowProperty(window_name, cv.WND_PROP_VISIBLE)
+        return status > 0
+    except:
+        return False
 
 def realtimeManipulation(args):
     ASSETS_PATH = 'assets/'
@@ -81,7 +87,11 @@ def realtimeManipulation(args):
             cv.putText(processed_frame, f"EFFECT: {effectManager.effect_history[-1].name}", (50, 350), 
                 cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
 
-        cv.imshow("Video Feed", processed_frame)
+        if is_window_open("Video Feed"):
+            cv.imshow("Video Feed", processed_frame)
+        else :
+            print("Terminated the video feed process.")
+            break
 
         key = cv.waitKey(10) & 0xFF
 
