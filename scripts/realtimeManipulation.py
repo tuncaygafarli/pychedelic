@@ -6,21 +6,11 @@ import sys
 import os
 from datetime import datetime
 
-from effects.tracker import Tracker
-from effects.color_chaos_manipulator import ColorChaosManipulator
-from effects.vhs import VHS
-
 from effects.effect_manager import EffectManager
 
-from processors.render_processor import RenderProcessor
 
 def realtimeManipulation(args):
     ASSETS_PATH = 'assets/'
-
-    # Effects
-    tracker = Tracker()
-    cc_manipulator = ColorChaosManipulator()
-    vhs = VHS()
 
     effectManager = EffectManager()
 
@@ -39,27 +29,11 @@ def realtimeManipulation(args):
     # <--------------------- EffectManager setting effect from here --------------------->
 
     if hasattr(args, "effects"):
-        if "Tracker" in args.effects:
-            effectManager.set_effect("tracker")
-        elif "ColorChaos" in args.effects:
-            effectManager.set_effect("color_chaos")
-        elif "VHS" in args.effects:
-            effectManager.set_effect("vhs")
-        elif "NightVision" in args.effects:
-            effectManager.set_effect("night_vision")
-        elif "FacialArtifacts" in args.effects:
-            effectManager.set_effect("facial_artifacts")
-        elif "ChromaticAberration" in args.effects:
-            effectManager.set_effect("chromatic_aberration")
-        elif "Grunge" in args.effects:
-            effectManager.set_effect("grunge")
-        elif "None" in args.effects:
-            effectManager.set_effect("none")
-        else:
-            print("No effect specified!")
-            return
+        effectManager.set_effect(args.effects[0])
+    else:
+        print("Undefined argument.")
+        return -1
         
-    
     # <--------------------- Script loop from here --------------------->
     #      
     while True:
@@ -104,10 +78,8 @@ def realtimeManipulation(args):
 
             cv.putText(processed_frame, f"EFFECT: {effectManager.effect_history[-1].name}", (50, 350), 
                 cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
-
-        #print("Processed frame number " + str(FRAME_ORDER))
+    
         cv.imshow("PROCESSED VIDEO", processed_frame)
-        FRAME_ORDER += 1
 
         key = cv.waitKey(10) & 0xFF
 

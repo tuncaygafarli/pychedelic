@@ -18,14 +18,14 @@ class EffectManager:
 
     def __init__(self):
         self.effects = {
-            "tracker" : Tracker(),
-            "color_chaos" : ColorChaosManipulator(),
-            "vhs" : VHS(),
-            "night_vision" : NightVision(),
-            "facial_artifacts" : FacialArtifacts(),
-            "chromatic_aberration" : ChromaticAberration(),
-            "grunge" : Grunge(),
-            "none" : NoneEffect()
+            "Tracker" : Tracker(),
+            "ColorChaos" : ColorChaosManipulator(),
+            "VHS" : VHS(),
+            "NightVision" : NightVision(),
+            "FacialArtifacts" : FacialArtifacts(),
+            "ChromaticAberration" : ChromaticAberration(),
+            "Grunge" : Grunge(),
+            "None" : NoneEffect()
         }
 
         self.effects_functions = {}

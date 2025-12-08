@@ -13,4 +13,3 @@ def listFunctions(args):
 
     for effect, functions in effectManager.effects_functions.items():
         print(f"{effect} - {functions}\n")
-

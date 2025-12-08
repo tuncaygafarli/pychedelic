@@ -6,11 +6,6 @@ import os
 import sys
 from datetime import datetime
 
-# ------------------- Importing effects from here -------------------
-from effects.tracker import Tracker
-from effects.color_chaos_manipulator import ColorChaosManipulator
-from effects.vhs import VHS
-
 from effects.effect_manager import EffectManager
 
 # ------------------- Importing functions from here -------------------
@@ -29,11 +24,7 @@ def renderVideo(args):
 
     capture = cv.VideoCapture(ASSETS_PATH + VIDEO_NAME_IO + ".mp4")
 
-    # ------------------- Initialize effects from here -------------------
-    tracker = Tracker()
-    cc_manipulator = ColorChaosManipulator()
-    vhs = VHS()
-
+    # ------------------- Initialize managers from here -------------------
     effectManager = EffectManager()
 
     # ------------------- Initialize processors from here -------------------
@@ -60,22 +51,7 @@ def renderVideo(args):
             print(f"📊 Processed {frame_count} frames ({fps:.1f} fps)")
         
         if hasattr(args, "effects"):
-            if "Tracker" in args.effects:
-                effectManager.set_effect("tracker")      
-            elif "ColorChaos" in args.effects:
-                effectManager.set_effect("color_chaos")
-            elif "VHS" in args.effects:
-                effectManager.set_effect("vhs")
-            elif "FacialArtifacts" in args.effects:
-                effectManager.set_effect("facial_artifacts")
-            elif "NightVision" in args.effects:
-                effectManager.set_effect("night_vision")
-            elif "ChromaticAberration" in args.effects:
-                effectManager.set_effect("chromatic_aberration")
-            elif "Grunge" in args.effects:
-                effectManager.set_effect("grunge")
-            elif "None" in args.effects:
-                effectManager.set_effect("none")
+            effectManager.set_effect(args.effects[0])
         else:
             print("Undefined argument.")
             break
