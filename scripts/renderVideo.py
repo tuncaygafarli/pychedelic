@@ -60,7 +60,6 @@ def renderVideo(args):
             fps = frame_count / elapsed if elapsed > 0 else 0
             print(f"📊 Processed {frame_count} frames ({fps:.1f} fps)")
         
-
         try :
             active_effect = effectManager.get_active_effect()
             elapsed_time = time.time() - active_effect.start_time

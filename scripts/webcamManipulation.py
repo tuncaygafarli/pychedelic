@@ -75,7 +75,7 @@ def webcamManipulation(args):
                         cv.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
 
             cv.putText(processed_frame, f"EFFECT: {effectManager.effect_history[-1].name}", (50, 350), 
-                cv.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
+                cv.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 1)
         
         if is_window_open("Video Feed"):
             cv.imshow("Video Feed", processed_frame)
