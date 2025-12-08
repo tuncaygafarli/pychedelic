@@ -65,7 +65,7 @@ class Grunge:
     
         # Wash out colors
         frame = cv.addWeighted(frame, 0.8, 
-                          np.full_like(frame, 30), 0.2, 0) 
+                          np.full_like(frame, 25), 0.2, 0) 
     
         return frame
     

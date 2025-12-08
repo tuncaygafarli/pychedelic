@@ -93,4 +93,3 @@ def webcamManipulation(args):
             continue
 
     cv.destroyAllWindows()
-        

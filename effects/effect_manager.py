@@ -78,7 +78,7 @@ class EffectManager:
                     line_number = exc_traceback.tb_lineno
                     filename = exc_traceback.tb_frame.f_code.co_filename
 
-                    print(f"Error : {e} in file {os.path.basename(filename)} : line number {line_number}")
+                    print(f"Error => {exc_type} : {e} in file {os.path.basename(filename)} : line number {line_number}")
         else:
             if hasattr(self.active_effect, 'process_current_frame'):
                 result = self.active_effect.process_current_frame(result, complexity)

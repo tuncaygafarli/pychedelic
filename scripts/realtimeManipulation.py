@@ -96,4 +96,3 @@ def realtimeManipulation(args):
             continue
 
     cv.destroyAllWindows()
-        
