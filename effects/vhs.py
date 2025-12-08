@@ -10,7 +10,7 @@ from helpers.normalizers import Normalizer
 normalizer = Normalizer()
 
 class VHS:
-    
+
     def __init__(self):
         self.name = "VHS Effect"
 
@@ -28,13 +28,13 @@ class VHS:
 
         edges = cv.Canny(gray, 50, 150)
         edge_density = np.sum(edges > 0) / edges.size
-    
+
         brightness_std = np.std(gray) / 255.0
 
         complexity = np.log1p(variance) * 0.5 + edge_density * 0.3 + brightness_std * 0.2
 
         return complexity
-    
+
     def add_frame(self, frame):
         self.frames.append(frame)
         complexity = self.calculate_complexity(frame)
@@ -45,16 +45,16 @@ class VHS:
             print(f"Current {self.name} threshold has set to " + str(self.threshold))
 
     def process_current_frame(self, frame, complexity):
-        if self.threshold is None:  
-            cv.putText(frame, "CALIBRATING...", (50, 50), 
+        if self.threshold is None:
+            cv.putText(frame, "CALIBRATING...", (50, 50),
                   cv.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-            return frame 
-           
+            return frame
+
         if complexity > self.threshold:
             return self.apply_vhs_complex(frame, complexity)
         else:
             return self.apply_vhs_simple(frame, complexity)
-        
+
     # <-------------------- VHS Scan Lines -------------------->
 
     def vhs_scan_lines(self, frame):
@@ -62,7 +62,7 @@ class VHS:
         dark_lines[:, :, 0] = dark_lines[:, :, 0] * 1.5
         frame[::3, :] = dark_lines
         return frame
-    
+
     # <-------------------- VHS Color Bleeding -------------------->
 
     def vhs_color_bleeding(self, frame):
@@ -74,8 +74,8 @@ class VHS:
             r[i] = np.roll(r[i], shift)
 
             if shift > 0:
-                r[i, :shift] = r[i, shift] 
-        
+                r[i, :shift] = r[i, shift]
+
             if i % 3 == 0:
                 shift_b = -6 + int(np.cos(i * 0.02) * 3)
                 b[i] = np.roll(b[i], shift_b)
@@ -83,68 +83,68 @@ class VHS:
             if i % 4 == 0:
                 shift_g = 2 + int(np.sin(i * 0.01) * 2)
                 g[i] = np.roll(g[i], shift_g)
-    
+
         return cv.merge([b, g, r])
-    
+
     # <-------------------- VHS Noise -------------------->
-    
+
     def vhs_noise(self, frame):
         h, w = frame.shape[:2]
-    
+
         noise_mask = np.random.random((h, w)) < 0.01  # 1% pixels get noise
         frame[noise_mask] = np.random.randint(0, 128, (np.sum(noise_mask), 3))
-    
+
         return frame
-    
+
     # <-------------------- VHS Head Clog -------------------->
-    
+
     def vhs_head_clog(self, frame):
         current_index = len(self.processed_frames)
-    
+
         if current_index > 0 and random.random() < 0.8:
             previous_frame = self.processed_frames[current_index - 1]
-            
+
             mix_ratio = random.uniform(0.3, 0.8)
             frame = cv.addWeighted(frame, 1-mix_ratio, previous_frame, mix_ratio, 0)
-        
+
         return frame
-    
+
     # <-------------------- VHS Tape Damage -------------------->
-    
+
     def vhs_tape_damage(self, frame):
         h, w = frame.shape[:2]
-    
+
         for _ in range(random.randint(1, 5)):
             glitch_y = random.randint(0, h-10)
             glitch_height = random.randint(1, 20)
-            
+
             shift_amount = random.randint(-50, 50)
             frame[glitch_y:glitch_y+glitch_height] = np.roll(
                 frame[glitch_y:glitch_y+glitch_height], shift_amount, axis=1
             )
-        
+
         return frame
-    
+
     # <-------------------- VHS Tape Glitch -------------------->
-    
+
     def vhs_tape_glitch(self, frame):
         h, w = frame.shape[:2]
-    
-        glitch_x = random.randint(0, w-50)      
-        glitch_y = random.randint(0, h-50)     
-        glitch_width = random.randint(10, 30) 
+
+        glitch_x = random.randint(0, w-50)
+        glitch_y = random.randint(0, h-50)
+        glitch_width = random.randint(10, 30)
         glitch_height = random.randint(10, 30)
-        
+
         r_channel = random.randint(0, 10)
-        g_channel = random.randint(0, 10) 
+        g_channel = random.randint(0, 10)
         b_channel = random.randint(0, 10)
-        
+
         frame[glitch_y:glitch_y+glitch_height, glitch_x:glitch_x+glitch_width] = [b_channel, g_channel, r_channel]
-        
+
         return frame
-    
+
     # <-------------------- VHS Barrel Distortion -------------------->
-    
+
     def vhs_barrel_distortion(self, frame, complexity=None, intensity=None):
 
         if complexity is None:
@@ -174,7 +174,7 @@ class VHS:
         map_y = (y_distorted * (h/2)) + h/2
 
         return cv.remap(frame, map_x.astype(np.float32), map_y.astype(np.float32), cv.INTER_LINEAR)
-    
+
     # <-------------------- Dynamic Threshold Functions -------------------->
 
     def apply_vhs_complex(self, frame, complexity):
@@ -196,5 +196,5 @@ class VHS:
         if random.random() < 0.00000000001:
             frame = self.vhs_tape_damage(frame)
             frame = self.vhs_tape_glitch(frame)
-        
-        return frame  
+
+        return frame

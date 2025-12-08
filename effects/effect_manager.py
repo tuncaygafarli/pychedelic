@@ -36,12 +36,12 @@ class EffectManager:
 
         for effect_name, effect_instance in self.effects.items():
             methods = inspect.getmembers(effect_instance, predicate=inspect.ismethod)
-            
+
             method_names = [
-                method[0] for method in methods 
-                if not method[0].startswith('__') and not method[0].endswith('__')
+                method[0] for method in methods
+                if not method[0].startswith('__') and not method[0].endswith('__') and not method[0].startswith("add") and not method[0].startswith("process")
             ]
-            
+
             self.effects_functions[effect_name] = method_names
 
 
@@ -54,13 +54,13 @@ class EffectManager:
         else:
             print("Couldn't find effect!")
             return False
-        
+
     def process_frame(self, frame, complexity, args):
         if not self.active_effect or self.toggled == False:
             return frame
-            
+
         result = frame.copy()
-        
+
         if args.functions:
             for func_name in args.functions:
                 try:
@@ -75,12 +75,12 @@ class EffectManager:
         else:
             if hasattr(self.active_effect, 'process_current_frame'):
                 result = self.active_effect.process_current_frame(result, complexity)
-        
+
         return result
-    
+
     def get_active_effect(self):
         return self.active_effect
-    
+
     def get_effect(self, effect_name):
         effect = self.effects[effect_name]
         return effect

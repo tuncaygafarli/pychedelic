@@ -4,7 +4,7 @@ import numpy as np
 class Normalizer:
 
     """
-    Defining some mathematical foundations from here 
+    Defining some mathematical foundations from here
     to easily calculate complexities
     """
 
@@ -22,18 +22,24 @@ class Normalizer:
         Maps any number to 0-1 range
         center: where the output is 0.5
         steepness: how quickly it transitions
+
+        Heavily relies on normalization formula { ( Value - Min_Value  ) / ( Max_Value - Value  )  }
         """
 
         return 1 / (1 + np.exp(-steepness * (x - center)))
-    
+
     def modulate_weber(self, base, complexity):
         modulation = 1 + 3 * complexity
         return base * modulation
-    
+
     def perceptual_sigmoid(self, x, center, base, complexity):
         """
         Weber-Fechner: ∆I/I = constant
         Adapts sigmoid for perceptual scaling
+
+        center - calculates the center points of matrice
+        base - conditional state of keys for optimizated values
+        complexity - the output from Effect class
         """
 
         log_x = np.log1p(x)
@@ -43,5 +49,5 @@ class Normalizer:
 
         base_steepness = 8.0
         steepness = base_steepness / (1 + 10 * weber_fraction)
-        
+
         return 1 / (1 + np.exp(-steepness * (log_x - log_center)))
