@@ -51,9 +51,9 @@ class VHS:
             return frame
 
         if complexity > self.threshold:
-            return self.apply_vhs_complex(frame, complexity)
+            return self.apply_vhs_complex(frame,)
         else:
-            return self.apply_vhs_simple(frame, complexity)
+            return self.apply_vhs_simple(frame)
 
     # <-------------------- VHS Scan Lines -------------------->
 
@@ -145,11 +145,7 @@ class VHS:
 
     # <-------------------- VHS Barrel Distortion -------------------->
 
-    def vhs_barrel_distortion(self, frame, complexity=None, intensity=None):
-
-        if complexity is None:
-            complexity = self.calculate_complexity(frame)
-
+    def vhs_barrel_distortion(self, frame, intensity=0.1):
         h, w = frame.shape[:2]
 
         j, i = np.meshgrid(np.arange(w), np.arange(h))
@@ -171,11 +167,11 @@ class VHS:
 
     # <-------------------- Dynamic Threshold Functions -------------------->
 
-    def apply_vhs_complex(self, frame, complexity):
+    def apply_vhs_complex(self, frame):
         frame = self.vhs_scan_lines(frame)
         frame = self.vhs_color_bleeding(frame)
         frame = self.vhs_head_clog(frame)
-        frame = self.vhs_barrel_distortion(frame, complexity)
+        frame = self.vhs_barrel_distortion(frame)
 
         if random.random() < 0.000000000000005:
             frame = self.vhs_tape_damage(frame)
@@ -186,6 +182,7 @@ class VHS:
     def apply_vhs_simple(self, frame):
         frame = self.vhs_scan_lines(frame)
         frame = self.vhs_color_bleeding(frame)
+        frame = self.vhs_barrel_distortion(frame)
 
         if random.random() < 0.00000000001:
             frame = self.vhs_tape_damage(frame)
