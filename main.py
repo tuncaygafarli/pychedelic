@@ -35,7 +35,7 @@ parser = argparse.ArgumentParser(description="OpenCV Visual Artifacts - Transfor
 parser.add_argument(
     "-mode", "--mode", 
     type=str,
-    choices=['render','rtm','webcam'],
+    choices=['render','live','webcam'],
     help="Sets the mode to specified argument"
 )
 
@@ -67,7 +67,7 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-if hasattr(args, "mode") and args.mode == "rtm":
+if hasattr(args, "mode") and args.mode == "live":
     realtimeFilter(args)
 elif hasattr(args, "mode") and args.mode == "render":
     videoRenderer(args)
