@@ -23,20 +23,11 @@ def is_window_open(window_name):
 
 
 def webcamManipulation(args):
-    # Effects
-    tracker = Tracker()
-    cc_manipulator = ColorChaosManipulator()
-    vhs = VHS()
-
     effectManager = EffectManager()
-
-    # I/O
 
     capture = cv.VideoCapture(0)
     capture.set(cv.CAP_PROP_FRAME_WIDTH, 640)
     capture.set(cv.CAP_PROP_FRAME_HEIGHT, 480)
-    output_frames = []
-    FRAME_ORDER = 0
 
     # <--------------------- EffectManager setting effect from here --------------------->
 
