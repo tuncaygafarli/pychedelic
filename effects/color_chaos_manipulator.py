@@ -113,18 +113,30 @@ class ColorChaosManipulator:
 
         return cv.cvtColor(hsv, cv.COLOR_HSV2BGR)
     
-    def sine_distortion(self, frame, time, wave_strength=10):
+    def sine_distortion(self, frame, time=time.time(), wave_strength=random.randint(10,15), smooth_factor=0.1, speed_factor=2.0):
         h, w = frame.shape[:2]
     
-        y_coords, x_coords = np.indices((h, w)) # study this part when you wake up [ vectorized operations ]
+        if not hasattr(self, 'prev_time'):
+            self.prev_time = time
+
+        sped_up_time = time * speed_factor
+
+        smoothed_time = self.prev_time * (1 - smooth_factor) + sped_up_time * smooth_factor
+        self.prev_time = smoothed_time
         
-        wave_x = np.sin(y_coords * 0.05 + time) * wave_strength
-        wave_y = np.cos(x_coords * 0.05 + time) * wave_strength
+        y_coords, x_coords = np.indices((h, w))
         
-        new_x = np.clip(x_coords + wave_x, 0, w-1).astype(np.int32)
-        new_y = np.clip(y_coords + wave_y, 0, h-1).astype(np.int32)
+        wave_x = np.sin(y_coords * 0.05 + smoothed_time) * wave_strength
+        wave_y = np.cos(x_coords * 0.05 + smoothed_time) * wave_strength
         
-        return frame[new_y, new_x]
+        map_x = np.clip(x_coords + wave_x, 0, w-1).astype(np.float32)
+        map_y = np.clip(y_coords + wave_y, 0, h-1).astype(np.float32)
+        
+        distorted = cv.remap(frame, map_x, map_y, 
+                            interpolation=cv.INTER_CUBIC,
+                            borderMode=cv.BORDER_REFLECT)
+        
+        return distorted
     
     def rgb_split(self, frame, offset):
         b, g, r = cv.split(frame)
