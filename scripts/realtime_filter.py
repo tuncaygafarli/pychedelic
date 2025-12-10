@@ -29,8 +29,8 @@ def realtimeFilter(args):
     VIDEO_PATH = ASSETS_PATH + VIDEO_NAME_IO + ".mp4"
 
     capture = cv.VideoCapture(VIDEO_PATH)
-    output_frames = []
-    FRAME_ORDER = 0
+    width = int(capture.get(cv.CAP_PROP_FRAME_WIDTH))
+    height = int(capture.get(cv.CAP_PROP_FRAME_HEIGHT))
 
     # <--------------------- EffectManager setting effect from here --------------------->
 
@@ -41,6 +41,7 @@ def realtimeFilter(args):
         return -1
         
     cv.namedWindow('Video Feed', cv.WINDOW_NORMAL)
+    cv.resizeWindow('Video Feed', width, height)
     
     # <--------------------- Script loop from here --------------------->
 

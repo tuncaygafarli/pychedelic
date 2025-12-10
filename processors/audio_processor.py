@@ -5,7 +5,6 @@ from scipy.fftpack import fft, ifft, fftfreq
 from scipy import signal
 
 class AudioProcessor:
-
     def __init__(self, audio_path, sample_rate=44100, buffer_size=1024):
         self.audio_path = audio_path
         self.audio_data = None
