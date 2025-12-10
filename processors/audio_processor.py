@@ -34,6 +34,7 @@ class AudioProcessor:
 
     def analyze_spectrum(self, frame, audio):
         sample_rate, audio_data = wavfile.read(audio)
+        self.sample_rate = sample_rate
 
         n = len(audio_data)
 
@@ -42,3 +43,5 @@ class AudioProcessor:
 
         magnitude_freq = np.abs(audio_freq)
         magnitude_freq = magnitude_freq / float(n)
+
+        print(magnitude_freq)
