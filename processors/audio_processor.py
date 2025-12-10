@@ -3,17 +3,25 @@ import numpy as np
 from scipy.io import wavfile
 from scipy.fftpack import fft, ifft, fftfreq
 from scipy import signal
+import librosa
 
 class AudioProcessor:
     def __init__(self, audio_path, sample_rate=44100, buffer_size=1024):
         self.audio_path = audio_path
-        self.audio_data = None
+        
+        self.sample_rate, audio_raw = wavfile.read(audio_path)
+
+        print(f"Loaded audio: {audio_path}")
+        print(f"Sample rate: {self.sample_rate} Hz")
+        print(f"Shape of loaded data: {audio_raw.shape if hasattr(audio_raw, 'shape') else 'No shape (not array)'}")
+        print(f"Original dtype: {audio_raw.dtype}")
+
+        self.audio_data = audio_raw
 
         self.tempo = 0
         self.beat_timestamps = []
         self.energy_history = []
 
-        self.sample_rate = sample_rate
         self.buffer_size = buffer_size
 
         self.frequency_bands = {
@@ -30,7 +38,7 @@ class AudioProcessor:
         }
 
         if self.audio_data.shape > 1:
-             print("Initializing stereo audio : {self.audio_data}")
+            print("Initializing stereo audio : {self.audio_data}")
 
         # normalizing value between -1 and 1 for safe processing to prevent numerical overflow
         max_val = np.max(np.abs(self.audio_data))
@@ -56,7 +64,8 @@ class AudioProcessor:
         magnitudes_db = 20 * np.log10(magnitudes + 1e-10)
 
         return frequencies, magnitudes_db
+    
+    def bass_energy(self):
+        frequencies, decibels = self.analyze_freq_content()
 
-
-
-
+        print(frequencies)
