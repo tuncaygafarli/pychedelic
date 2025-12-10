@@ -15,7 +15,7 @@ from processors.render_processor import RenderProcessor
 def videoRenderer(args):
     # ------------------- Initialize file from here -------------------
 
-    ASSETS_PATH = 'assets/'
+    ASSETS_PATH = 'assets/video/'
     FILENAME = "video_" + str(datetime.now().strftime("%Y_%m_%d_%H_%M_%S")) + ".mp4"
 
     entries = os.listdir(ASSETS_PATH)

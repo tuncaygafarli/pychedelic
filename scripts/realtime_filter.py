@@ -16,7 +16,7 @@ def is_window_open(window_name):
         return False
 
 def realtimeFilter(args):
-    ASSETS_PATH = 'assets/'
+    ASSETS_PATH = 'assets/video/'
 
     effectManager = EffectManager()
 

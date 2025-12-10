@@ -1,12 +1,14 @@
 import cv2 as cv
 import numpy as np
 from scipy.io import wavfile
-from scipy.fftpack import fft
+from scipy.fftpack import fft, ifft, fftfreq
+from scipy import signal
 
 class AudioProcessor:
 
     def __init__(self, audio_path, sample_rate=44100, buffer_size=1024):
         self.audio_path = audio_path
+        self.audio_data = None
 
         self.tempo = 0
         self.beat_timestamps = []
@@ -28,20 +30,34 @@ class AudioProcessor:
             'sine_distortion': 1.0
         }
 
+        if self.audio_data.shape > 1:
+             print("Initializing stereo audio : {self.audio_data}")
+
+        # normalizing value between -1 and 1 for safe processing to prevent numerical overflow
+        max_val = np.max(np.abs(self.audio_data))
+        if max_val > 0:
+            self.audio_data = self.audio_data.astype(np.float32) / max_val
+
     def band_multiplication(self, frame, frequency_band, intensity):
             if frequency_band == "bass":
                 return np.clip(frame * self.frequency_bands["bass"], 0, 255, None)
 
-    def analyze_spectrum(self, frame, audio):
-        sample_rate, audio_data = wavfile.read(audio)
-        self.sample_rate = sample_rate
+    def analyze_freq_content(self):
+        n = len(self.audio_data)
 
-        n = len(audio_data)
+        window = signal.windows.hann(n)
+        windowed_audio = self.audio_data * window
 
-        audio_freq = fft(audio_data)
-        audio_freq = audio_freq[0:int(np.ceil((n + 1) / 2.0))]
+        ## apply Fourier transitions from here
+        audio_fft = fft(windowed_audio)
 
-        magnitude_freq = np.abs(audio_freq)
-        magnitude_freq = magnitude_freq / float(n)
+        frequencies = fftfreq(n, 1/self.sample_rate)[:n//2]
+        magnitudes = np.abs(audio_fft[:n//2]) / n
 
-        print(magnitude_freq)
+        magnitudes_db = 20 * np.log10(magnitudes + 1e-10)
+
+        return frequencies, magnitudes_db
+
+
+
+
