@@ -8,7 +8,7 @@ import librosa
 class AudioProcessor:
     def __init__(self, audio_path, sample_rate=44100, buffer_size=1024):
         self.audio_path = audio_path
-        
+
         self.sample_rate, audio_raw = wavfile.read(audio_path)
 
         print(f"Loaded audio: {audio_path}")
@@ -64,7 +64,7 @@ class AudioProcessor:
         magnitudes_db = 20 * np.log10(magnitudes + 1e-10)
 
         return frequencies, magnitudes_db
-    
+
     def bass_energy(self):
         frequencies, decibels = self.analyze_freq_content()
 

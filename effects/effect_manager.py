@@ -41,7 +41,7 @@ class EffectManager:
 
             method_names = [
                 method[0] for method in methods
-                if not method[0].startswith('__') and not method[0].endswith('__') and not method[0].startswith("add") and not method[0].startswith("process")
+                if not method[0].startswith('_') and not method[0].endswith('__') and not method[0].startswith("add") and not method[0].startswith("process") and not method[0].startswith("calculate") and not method[0].startswith("apply")
             ]
 
             self.effects_functions[effect_name] = method_names
