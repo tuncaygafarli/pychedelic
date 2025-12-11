@@ -48,7 +48,7 @@ class FacialArtifacts:
         return complexity
 
     def blur_face(self, frame):
-        self.name = "Face blur effect"
+        self.name = "Face blurring effect"
         faces = faceDetector.detect_face(frame)
         result_frame = frame.copy()
 
@@ -58,7 +58,7 @@ class FacialArtifacts:
         return result_frame
 
     def blur_eye(self, frame):
-        self.name = "Eye blur effect"
+        self.name = "Eye blurring effect"
         eyes = faceDetector.detect_eyes(frame)
         result_frame = frame.copy()
 
