@@ -5,6 +5,7 @@ import math
 import random
 import sys
 import os 
+from colorama import Fore, Back, Style, init
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -27,7 +28,7 @@ class ChromaticAberration:
 
         if len(self.complexities) > 10 and len(self.complexities) % 10 == 0 or self.threshold == None:
             self.threshold = np.mean(self.complexities)
-            print(f"Current {self.name} threshold has set to " + str(self.threshold))
+            print(Fore.YELLOW + f"Current {self.name} threshold has set to " + Fore.GREEN + Style.BRIGHT + str(self.threshold))
 
     def calculate_complexity(self, frame):
         gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)

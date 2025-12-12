@@ -43,7 +43,7 @@ class VHS:
 
         if len(self.complexities) > 10 and len(self.complexities) % 10 == 0 or self.threshold == None:
             self.threshold = np.mean(self.complexities)
-            print(f"Current {self.name} threshold has set to " + str(self.threshold))
+            print(Fore.YELLOW + f"Current {self.name} threshold has set to " + Fore.GREEN + Style.BRIGHT + str(self.threshold))
 
     def process_current_frame(self, frame, complexity):
         if self.threshold is None:

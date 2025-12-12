@@ -21,6 +21,8 @@ class ColorChaos:
         self.effect_history = []
 
         self.start_time = time.time()
+        self.current_effect = None
+        self.effect_duration = 0
         
         self._generate_color_palettes()
 
@@ -59,7 +61,7 @@ class ColorChaos:
 
         if len(self.complexities) > 10 and len(self.complexities) % 10 == 0 or self.threshold == None:
             self.threshold = np.mean(self.complexities)
-            print(Back.YELLOW + f"Current {self.name} threshold has set to " + str(self.threshold))
+            print(Fore.YELLOW + f"Current {self.name} threshold has set to " + Fore.GREEN + Style.BRIGHT + str(self.threshold))
 
     def process_current_frame(self, frame, complexity):
         if self.threshold is None:  
@@ -73,39 +75,78 @@ class ColorChaos:
             return frame
         
     def _complex_frame_effect(self, frame, complexity):
-        effect_type = random.choice([
-            'channel_swap', 'color_blast','psychedelic_master'
-        ])
-
-        match effect_type:
+        if self.effect_duration <= 0:
+            self.current_effect = random.choice(['channel_swap', 
+                                                 'color_blast', 
+                                                 'psychedelic_master', 
+                                                 'hue_shift',
+                                                 'sine_distortion',
+                                                 'rgb_split',
+                                                 'channel_shifting',
+                                                 'lcd_shift',
+                                                 'kaleidoscope'
+                                                 ])
+            self.effect_duration = random.randint(30, 60)
+            
+        self.effect_duration -= 1
+        
+        match self.current_effect:
             case "channel_swap":
                 return self.channel_swap(frame)
             case "color_blast":
                 return self.color_blast(frame, complexity)
             case "psychedelic_master":
-                return self.psychedelic_master(frame, time.time() - self.start_time)
+                time_counter = time.time() - self.start_time
+                return self.psychedelic_master(frame, time_counter)
+            case "hue_shift":
+                return self.hue_shift(frame)
+            case "sine_distortion":
+                time_counter = time.time() - self.start_time
+                wave_strength = 5 + 3 * math.sin(time_counter * 0.03) 
+                return self.sine_distortion(frame, time_counter * 0.5, wave_strength)
+            case "rgb_split":
+                time_counter = time.time() - self.start_time
+                split_amount = int(2 + math.sin(time_counter * 0.2) * 3) 
+                return self.rgb_split(frame, split_amount)
+            case "channel_shifting":
+                if random.random() < 0.1:
+                    return self.channel_shifting(frame)
+                else :
+                    return frame
+            case "lcd_shift":
+                return self.lcd_shift(frame)
+            case "kaleidoscope":
+                time_counter = time.time() - self.start_time
+                if int(time_counter) % 120 == 0: 
+                    segments = random.choice([4, 6, 8])
+                    return self.kaleidoscope(frame, segments)
+                else :
+                    return frame
     
     def channel_swap(self, frame):
-        b, g, r = cv.split(frame)
+        result_frame = frame.copy()
+        b, g, r = cv.split(result_frame)
         channels = [b, g, r]
         random.shuffle(channels)
         return cv.merge(channels) 
     
     def color_blast(self, frame, complexity):
+        result_frame = frame.copy()
         intensity = min(0.3, complexity / (self.threshold * 8))
     
         color = np.array([random.randint(0, 255) for _ in range(3)], dtype=np.uint8)
         
-        result = frame.astype(np.float32) * (1 - intensity) + color * intensity
+        result = result_frame.astype(np.float32) * (1 - intensity) + color * intensity
         return result.astype(np.uint8)
     
     # ------------------- Defining Psychedelic concepts from here ------------------- 
 
     def hue_shift(self, frame):
+        result_frame = frame.copy()
         time_elapsed = time.time() - self.start_time
         shift_amount = int(np.sin(time_elapsed * 0.5) * 30)
 
-        hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
+        hsv = cv.cvtColor(result_frame, cv.COLOR_BGR2HSV)
 
         hue_channel = hsv[:, :, 0]
         
@@ -117,7 +158,8 @@ class ColorChaos:
         return cv.cvtColor(hsv, cv.COLOR_HSV2BGR)
     
     def sine_distortion(self, frame, time=time.time(), wave_strength=random.randint(10,15), smooth_factor=0.1, speed_factor=2.0):
-        h, w = frame.shape[:2]
+        result_frame = frame.copy()
+        h, w = result_frame.shape[:2]
     
         if not hasattr(self, 'prev_time'):
             self.prev_time = time
@@ -135,15 +177,16 @@ class ColorChaos:
         map_x = np.clip(x_coords + wave_x, 0, w-1).astype(np.float32)
         map_y = np.clip(y_coords + wave_y, 0, h-1).astype(np.float32)
         
-        distorted = cv.remap(frame, map_x, map_y, 
+        distorted = cv.remap(result_frame, map_x, map_y, 
                             interpolation=cv.INTER_CUBIC,
                             borderMode=cv.BORDER_REFLECT)
         
         return distorted
     
     def rgb_split(self, frame, offset=1):
+        result_frame = frame.copy()
         offset = int(2 + math.sin(time.time() - self.start_time * 0.2) * 3) 
-        b, g, r = cv.split(frame)
+        b, g, r = cv.split(result_frame)
 
         b_shifted = np.roll(b, offset, axis=1)
         g_shifted = np.roll(g, 0, axis=1)
@@ -152,7 +195,8 @@ class ColorChaos:
         return cv.merge([b_shifted, g_shifted, r_shifted])
     
     def channel_shifting(self, frame):
-        b, g, r = cv.split(frame)
+        result_frame = frame.copy()
+        b, g, r = cv.split(result_frame)
         h, w = r.shape
 
         for i in range(h):
@@ -184,7 +228,8 @@ class ColorChaos:
         return result_frame
     
     def kaleidoscope(self, frame, num_segments=6):
-        h, w = frame.shape[:2]
+        result_frame = frame.copy()
+        h, w = result_frame.shape[:2]
         center_x, center_y = w // 2, h // 2
         radius = min(center_x, center_y)
         
@@ -214,13 +259,15 @@ class ColorChaos:
         source_x = np.clip(source_x, 0, w-1)
         source_y = np.clip(source_y, 0, h-1)
         
-        result = np.zeros_like(frame)
-        result[circle_mask] = frame[source_y[circle_mask], source_x[circle_mask]]
+        result = np.zeros_like(result_frame)
+        result[circle_mask] = result_frame[source_y[circle_mask], source_x[circle_mask]]
         
         return result
     
     def psychedelic_master(self, frame, time_counter):
         result = frame.copy()
+
+        result = self.lcd_shift(result)
 
         result = self.hue_shift(result) 
         
@@ -230,7 +277,6 @@ class ColorChaos:
         split_amount = int(2 + math.sin(time_counter * 0.2) * 3) 
         result = self.rgb_split(result, split_amount)
 
-
         if random.random() < 0.1:
             result = self.channel_shifting(result)
         
@@ -238,5 +284,4 @@ class ColorChaos:
             segments = random.choice([4, 6, 8])
             result = self.kaleidoscope(result, segments)
         
-        result = self.lcd_shift(result)
         return result
