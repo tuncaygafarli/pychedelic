@@ -67,7 +67,7 @@ class ColorChaosManipulator:
         if complexity > self.threshold:
             return self._complex_frame_effect(frame, complexity)
         else:
-            return self.hue_shift(frame)
+            return frame
         
     def _complex_frame_effect(self, frame, complexity):
         effect_type = random.choice([
@@ -96,18 +96,18 @@ class ColorChaosManipulator:
         result = frame.astype(np.float32) * (1 - intensity) + color * intensity
         return result.astype(np.uint8)
     
-
     # ------------------- Defining Psychedelic concepts from here ------------------- 
 
     def hue_shift(self, frame):
-        shift_amount = int(math.sin(time.time() - self.start_time * 0.1) * 30)
+        time_elapsed = time.time() - self.start_time
+        shift_amount = int(np.sin(time_elapsed * 0.5) * 30)
 
         hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
 
         hue_channel = hsv[:, :, 0]
         
         hue_channel_int = hue_channel.astype(np.int32)
-        new_hue = (hue_channel_int + shift_amount) % 180
+        new_hue = (hue_channel_int * shift_amount) % 180
         
         hsv[:, :, 0] = new_hue.astype(np.uint8)
 
@@ -160,6 +160,25 @@ class ColorChaosManipulator:
     
         return cv.merge([b, g, r])
     
+    def lcd_shift(self, frame):
+        result_frame = frame.copy()
+        h, w, _ = result_frame.shape
+
+        x = 0
+        y = 0
+
+        shift_amount = 3 + 5 * np.sin(time.time() - self.start_time * 0.01)
+
+        if shift_amount < 0:
+            shift_amount = 5 + 10 * np.sin(time.time() - self.start_time * 0.01)
+            result_frame[y:y+h, x:x+w] = result_frame[y:y+h, x:x+w] * shift_amount
+        else :
+            result_frame[y:y+h, x:x+w] = result_frame[y:y+h, x:x+w] * shift_amount
+
+        result_frame[y:y+h, x:x+w] = np.roll(result_frame[y:y+h, x:x+w], shift_amount, axis = 1)
+
+        return result_frame
+    
     def kaleidoscope(self, frame, num_segments=6):
         h, w = frame.shape[:2]
         center_x, center_y = w // 2, h // 2
@@ -207,6 +226,7 @@ class ColorChaosManipulator:
         split_amount = int(2 + math.sin(time_counter * 0.2) * 3) 
         result = self.rgb_split(result, split_amount)
 
+
         if random.random() < 0.1:
             result = self.channel_shifting(result)
         
@@ -214,4 +234,5 @@ class ColorChaosManipulator:
             segments = random.choice([4, 6, 8])
             result = self.kaleidoscope(result, segments)
         
+        result = self.lcd_shift(result)
         return result
