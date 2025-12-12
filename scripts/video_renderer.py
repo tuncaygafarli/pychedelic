@@ -5,8 +5,11 @@ import subprocess
 import os
 import sys
 from datetime import datetime
+from colorama import Fore, Back, Style, init
 
 from effects.effect_manager import EffectManager
+
+init(autoreset=True)
 
 # ------------------- Importing functions from here -------------------
 
@@ -22,7 +25,14 @@ def videoRenderer(args):
     files = [entry for entry in entries if os.path.isfile(os.path.join(ASSETS_PATH, entry))]
     print("Files to be processed in assets folder : " + str(files))
 
-    VIDEO_NAME_IO = input(str("Enter video name to process : "))
+    VIDEO_NAME_IO = input(str(Fore.BLUE + "Enter video name to process : "))
+
+    if(VIDEO_NAME_IO + ".mp4" not in files):
+        print(Fore.RED + f"Error: Couldn't find the associated file '{VIDEO_NAME_IO}'. Please check the name, or configure proper assets path.")
+        return False
+    else :
+        VIDEO_PATH = ASSETS_PATH + VIDEO_NAME_IO + ".mp4"
+        print(Fore.GREEN + f"File found. Processing: {VIDEO_PATH}")
 
     capture = cv.VideoCapture(ASSETS_PATH + VIDEO_NAME_IO + ".mp4")
 
@@ -105,11 +115,11 @@ def videoRenderer(args):
 
     if active_effect.processed_frames:
         total_time = time.time() - active_effect.start_time
-        print(f"✅ Processed {len(active_effect.processed_frames)} frames in {total_time:.2f}s")
-        print(f"📹 Exporting at {len(active_effect.processed_frames)/total_time:.1f} fps...")
+        print(Fore.GREEN + Style.BRIGHT + f"✅ Processed {len(active_effect.processed_frames)} frames in {total_time:.2f}s")
+        print(Fore.GREEN + Style.BRIGHT + f"📹 Exporting at {len(active_effect.processed_frames)/total_time:.1f} fps...")
         renderProcessor.renderFrames(active_effect.processed_frames, "build/" + FILENAME, fps_cv)
-        print("🎬 Video exported: " + FILENAME)
+        print(Fore.GREEN + Style.BRIGHT + "🎬 Video exported: " + FILENAME)
     else:
-        print("❌ No frames processed!")
+        print(Fore.RED + Style.BRIGHT + "❌ No frames processed!")
 
-    print(f"🎉 Done! Open {FILENAME} to see your masterpiece!")
+    print(Fore.GREEN + Style.BRIGHT + f"🎉 Done! Open {FILENAME} to see your masterpiece!")

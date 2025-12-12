@@ -17,7 +17,7 @@ class ColorChaos:
         self.complexities = []
         self.threshold = None
 
-        self.color_palettes = []
+        self.color_palettes = {}
         self.effect_history = []
 
         self.start_time = time.time()
@@ -27,19 +27,13 @@ class ColorChaos:
         self._generate_color_palettes()
 
     def _generate_color_palettes(self):
-        self.color_palettes = [
-            # Neon palette
-            [(0, 255, 255), (255, 0, 255), (255, 255, 0), (0, 255, 0)],
-            # Warm palette  
-            [(255, 100, 0), (255, 200, 0), (255, 50, 50), (200, 100, 0)],
-            # Cool palette
-            [(0, 100, 255), (100, 0, 255), (0, 200, 255), (50, 50, 255)],
-            # Psychedelic palette
-            [(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)) 
-             for _ in range(4)],
-            # Monochrome madness
-            [(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))] * 4
-        ]
+        self.color_palettes = {
+            "neon" : [(0, 255, 255), (255, 0, 255), (255, 255, 0), (0, 255, 0)],
+            "warm" : [(255, 100, 0), (255, 200, 0), (255, 50, 50), (200, 100, 0)],
+            "cool" : [(0, 100, 255), (100, 0, 255), (0, 200, 255), (50, 50, 255)],
+            "psychedelic" : [(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)) for _ in range(4)],
+            "monochrome_madness" : [(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))] * 4
+        }
 
     def calculate_complexity(self, frame):
         gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)

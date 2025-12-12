@@ -5,6 +5,9 @@ import subprocess
 import sys
 import os
 from datetime import datetime
+from colorama import Fore, Back, Style, init
+
+init(autoreset=True)
 
 from effects.effect_manager import EffectManager
 
@@ -16,7 +19,6 @@ def is_window_open(window_name):
         return status > 0
     except:
         return False
-
 
 def webcamFilter(args):
     effectManager = EffectManager()
@@ -30,7 +32,7 @@ def webcamFilter(args):
     if hasattr(args, "effects"):
         effectManager.set_effect(args.effects[0])
     else:
-        print("Undefined argument.")
+        print(Fore.RED + Style.BRIGHT + "Undefined argument.")
         return False
     
     cv.namedWindow('Video Feed', cv.WINDOW_NORMAL)
@@ -76,12 +78,12 @@ def webcamFilter(args):
         if is_window_open("Video Feed"):
             cv.imshow("Video Feed", processed_frame)
         else :
-            print("Terminated the video feed process.")
+            print(Fore.RED + Style.BRIGHT + "Terminated the video feed process.")
             break
 
         key = cv.waitKey(10) & 0xFF
         if key == ord('q'):
-            print("Q key detected!")
+            print(Fore.RED + Style.BRIGHT + "Q key detected!")
             break
         
         if key == ord('s'):

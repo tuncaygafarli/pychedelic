@@ -99,7 +99,7 @@ class FacialArtifacts:
         result_frame = frame.copy()
 
         for (x, y, h, w) in faces:
-            shift_amount = 3 + 5 * np.sin(time.time() - self.start_time * 0.01)
+            shift_amount = 3 + 8 * np.sin(time.time() - self.start_time * 0.01)
             result_frame[y:y+h, x:x+w] = result_frame[y:y+h, x:x+w] * shift_amount
 
             result_frame[y:y+h, x:x+w] = np.roll(result_frame[y:y+h, x:x+w], shift_amount, axis = 1)
