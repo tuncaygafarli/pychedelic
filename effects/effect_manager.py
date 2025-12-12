@@ -3,6 +3,7 @@ import numpy as np
 import inspect
 import sys
 import os
+from colorama import Fore, Back, Style, init
 
 # ------------------- Import effects from here -------------------
 

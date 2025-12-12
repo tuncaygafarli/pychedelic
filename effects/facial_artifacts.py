@@ -3,6 +3,7 @@ import numpy as np
 import time
 import math
 import random
+from colorama import Fore, Back, Style, init
 
 from processors.face_detection import FaceDetector
 from effects.color_chaos import ColorChaos

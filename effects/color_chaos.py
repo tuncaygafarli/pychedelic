@@ -3,6 +3,9 @@ import math
 import random
 import numpy as np
 import time
+from colorama import Fore, Back, Style, init
+
+init(autoreset=True)
 
 class ColorChaos:
     def __init__(self):
@@ -56,7 +59,7 @@ class ColorChaos:
 
         if len(self.complexities) > 10 and len(self.complexities) % 10 == 0 or self.threshold == None:
             self.threshold = np.mean(self.complexities)
-            print(f"Current {self.name} threshold has set to " + str(self.threshold))
+            print(Back.YELLOW + f"Current {self.name} threshold has set to " + str(self.threshold))
 
     def process_current_frame(self, frame, complexity):
         if self.threshold is None:  

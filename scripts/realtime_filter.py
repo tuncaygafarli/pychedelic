@@ -1,12 +1,14 @@
 import cv2 as cv
 import argparse
 import time
-import subprocess
 import sys
 import os
 from datetime import datetime
+from colorama import Fore, Back, Style, init
 
 from effects.effect_manager import EffectManager
+
+init(autoreset=True)
 
 def is_window_open(window_name):
     try:
@@ -25,14 +27,14 @@ def realtimeFilter(args):
     print("Files to be processed in assets folder : " + str(files))
 
     # I/O
-    VIDEO_NAME_IO= str(input("Choose the video to process : "))
+    VIDEO_NAME_IO= str(input(Fore.BLUE + "Choose the video to process : "))
     
     if(VIDEO_NAME_IO + ".mp4" not in files):
-        print(f"Error: Couldn't find the associated file '{VIDEO_NAME_IO}'. Please check the name, or configure proper assets path.")
+        print(Fore.RED + f"Error: Couldn't find the associated file '{VIDEO_NAME_IO}'. Please check the name, or configure proper assets path.")
         return False
     else :
         VIDEO_PATH = ASSETS_PATH + VIDEO_NAME_IO + ".mp4"
-        print(f"File found. Processing: {VIDEO_PATH}")
+        print(Fore.GREEN + f"File found. Processing: {VIDEO_PATH}")
 
     capture = cv.VideoCapture(VIDEO_PATH)
     width = int(capture.get(cv.CAP_PROP_FRAME_WIDTH))

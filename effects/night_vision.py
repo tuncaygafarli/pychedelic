@@ -2,6 +2,7 @@ import cv2 as cv
 import numpy as np
 import random
 import time
+from colorama import Fore, Back, Style, init
 
 class NightVision:
     def __init__(self):

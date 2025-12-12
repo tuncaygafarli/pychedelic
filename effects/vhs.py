@@ -4,6 +4,7 @@ import sys
 import math
 import time
 import numpy as np
+from colorama import Fore, Back, Style, init
 
 from utils.normalizers import Normalizer
 
