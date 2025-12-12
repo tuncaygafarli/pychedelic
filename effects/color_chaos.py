@@ -72,9 +72,9 @@ class ColorChaos:
         if complexity > self.threshold:
             return self._complex_frame_effect(frame, complexity)
         else:
-            return frame
+            return self._simple_frame_effect(frame, complexity)
         
-    def _complex_frame_effect(self, frame, complexity):
+    def _complex_frame_effect(self, frame, complexity): 
         if self.effect_duration <= 0:
             self.current_effect = random.choice(['channel_swap', 
                                                  'color_blast', 
@@ -87,6 +87,55 @@ class ColorChaos:
                                                  'kaleidoscope'
                                                  ])
             self.effect_duration = random.randint(30, 60)
+            
+        self.effect_duration -= 1
+        
+        match self.current_effect:
+            case "channel_swap":
+                return self.channel_swap(frame)
+            case "color_blast":
+                return self.color_blast(frame, complexity)
+            case "psychedelic_master":
+                time_counter = time.time() - self.start_time
+                return self.psychedelic_master(frame, time_counter)
+            case "hue_shift":
+                return self.hue_shift(frame)
+            case "sine_distortion":
+                time_counter = time.time() - self.start_time
+                wave_strength = 5 + 3 * math.sin(time_counter * 0.03) 
+                return self.sine_distortion(frame, time_counter * 0.5, wave_strength)
+            case "rgb_split":
+                time_counter = time.time() - self.start_time
+                split_amount = int(2 + math.sin(time_counter * 0.2) * 3) 
+                return self.rgb_split(frame, split_amount)
+            case "channel_shifting":
+                if random.random() < 0.1:
+                    return self.channel_shifting(frame)
+                else :
+                    return frame
+            case "lcd_shift":
+                return self.lcd_shift(frame)
+            case "kaleidoscope":
+                time_counter = time.time() - self.start_time
+                if int(time_counter) % 120 == 0: 
+                    segments = random.choice([4, 6, 8])
+                    return self.kaleidoscope(frame, segments)
+                else :
+                    return frame
+    
+    def _simple_frame_effect(self, frame, complexity):
+        if self.effect_duration <= 0:
+            self.current_effect = random.choice(['channel_swap', 
+                                                 'color_blast', 
+                                                 'psychedelic_master', 
+                                                 'hue_shift',
+                                                 'sine_distortion',
+                                                 'rgb_split',
+                                                 'channel_shifting',
+                                                 'lcd_shift',
+                                                 'kaleidoscope'
+                                                 ])
+            self.effect_duration = random.randint(10, 30)
             
         self.effect_duration -= 1
         
@@ -157,10 +206,10 @@ class ColorChaos:
 
         return cv.cvtColor(hsv, cv.COLOR_HSV2BGR)
     
-    def sine_distortion(self, frame, time=time.time(), wave_strength=random.randint(10,15), smooth_factor=0.1, speed_factor=2.0):
+    def sine_distortion(self, frame, time=time.time(), wave_strength = 5 + 3 * math.sin(time.time() * 0.03) , smooth_factor=0.1, speed_factor=2.0):
         result_frame = frame.copy()
         h, w = result_frame.shape[:2]
-    
+
         if not hasattr(self, 'prev_time'):
             self.prev_time = time
 
