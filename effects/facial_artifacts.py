@@ -5,10 +5,10 @@ import math
 import random
 
 from processors.face_detection import FaceDetector
-from effects.color_chaos_manipulator import ColorChaosManipulator
+from effects.color_chaos import ColorChaos
 
 faceDetector = FaceDetector()
-color_chaos = ColorChaosManipulator()
+color_chaos = ColorChaos()
 
 class FacialArtifacts:
 

@@ -6,7 +6,7 @@ import sys
 from datetime import datetime
 
 from effects.tracker import Tracker
-from effects.color_chaos_manipulator import ColorChaosManipulator
+from effects.color_chaos import ColorChaosManipulator
 from processors.render_processor import RenderProcessor
 
 from scripts.video_renderer import videoRenderer

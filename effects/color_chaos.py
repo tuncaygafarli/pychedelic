@@ -4,7 +4,7 @@ import random
 import numpy as np
 import time
 
-class ColorChaosManipulator:
+class ColorChaos:
     def __init__(self):
         self.name = "ColorChaos Effect"
 
@@ -167,10 +167,10 @@ class ColorChaosManipulator:
         x = 0
         y = 0
 
-        shift_amount = 3 + 5 * np.sin(time.time() - self.start_time * 0.01)
+        shift_amount = 3 + 8 * np.sin(time.time() - self.start_time * 0.01)
 
         if shift_amount < 0:
-            shift_amount = 5 + 10 * np.sin(time.time() - self.start_time * 0.01)
+            shift_amount = 5 + 12 * np.sin(time.time() - self.start_time * 0.01)
             result_frame[y:y+h, x:x+w] = result_frame[y:y+h, x:x+w] * shift_amount
         else :
             result_frame[y:y+h, x:x+w] = result_frame[y:y+h, x:x+w] * shift_amount

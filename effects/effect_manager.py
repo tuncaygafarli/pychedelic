@@ -6,7 +6,7 @@ import os
 
 # ------------------- Import effects from here -------------------
 
-from effects.color_chaos_manipulator import ColorChaosManipulator
+from effects.color_chaos import ColorChaos
 from effects.tracker import Tracker
 from effects.vhs import VHS
 from effects.night_vision import NightVision
@@ -20,7 +20,7 @@ class EffectManager:
     def __init__(self):
         self.effects = {
             "Tracker" : Tracker(),
-            "ColorChaos" : ColorChaosManipulator(),
+            "ColorChaos" : ColorChaos(),
             "VHS" : VHS(),
             "NightVision" : NightVision(),
             "FacialArtifacts" : FacialArtifacts(),
