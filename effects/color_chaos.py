@@ -124,6 +124,7 @@ class ColorChaos:
                                                  'psychedelic_master', 
                                                  'hue_shift',
                                                  'sine_distortion',
+                                                 'tan_distortion'
                                                  'rgb_split',
                                                  'channel_shifting',
                                                  'lcd_shift',
@@ -144,6 +145,10 @@ class ColorChaos:
             case "hue_shift":
                 return self.hue_shift(frame)
             case "sine_distortion":
+                time_counter = time.time() - self.start_time
+                wave_strength = 5 + 3 * math.sin(time_counter * 0.03) 
+                return self.sine_distortion(frame, time_counter * 0.5, wave_strength)
+            case "tan_distortion":
                 time_counter = time.time() - self.start_time
                 wave_strength = 5 + 3 * math.sin(time_counter * 0.03) 
                 return self.sine_distortion(frame, time_counter * 0.5, wave_strength)
@@ -216,6 +221,32 @@ class ColorChaos:
         
         wave_x = np.sin(y_coords * 0.05 + smoothed_time) * wave_strength
         wave_y = np.cos(x_coords * 0.05 + smoothed_time) * wave_strength
+        
+        map_x = np.clip(x_coords + wave_x, 0, w-1).astype(np.float32)
+        map_y = np.clip(y_coords + wave_y, 0, h-1).astype(np.float32)
+        
+        distorted = cv.remap(result_frame, map_x, map_y, 
+                            interpolation=cv.INTER_CUBIC,
+                            borderMode=cv.BORDER_REFLECT)
+        
+        return distorted
+    
+    def tan_distortion(self, frame, time=time.time(), wave_strength = 5 + 3 * math.sin(time.time() * 0.03) , smooth_factor=0.1, speed_factor=2.0):
+        result_frame = frame.copy()
+        h, w = result_frame.shape[:2]
+
+        if not hasattr(self, 'prev_time'):
+            self.prev_time = time
+
+        sped_up_time = time * speed_factor
+
+        smoothed_time = self.prev_time * (1 - smooth_factor) + sped_up_time * smooth_factor
+        self.prev_time = smoothed_time
+        
+        y_coords, x_coords = np.indices((h, w))
+        
+        wave_x = np.tan(y_coords * 0.05 + smoothed_time) * wave_strength
+        wave_y = np.tanh(x_coords * 0.05 + smoothed_time) * wave_strength
         
         map_x = np.clip(x_coords + wave_x, 0, w-1).astype(np.float32)
         map_y = np.clip(y_coords + wave_y, 0, h-1).astype(np.float32)
