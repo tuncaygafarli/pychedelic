@@ -127,7 +127,8 @@ class ColorChaos:
                                                  'tan_distortion'
                                                  'rgb_split',
                                                  'channel_shifting',
-                                                 'lcd_shift',
+                                                 'lcd_sine_shift',
+                                                 'lcd_tan_shift',
                                                  'kaleidoscope'
                                                  ])
             self.effect_duration = random.randint(10, 30)
@@ -161,8 +162,10 @@ class ColorChaos:
                     return self.channel_shifting(frame)
                 else :
                     return frame
-            case "lcd_shift":
-                return self.lcd_shift(frame)
+            case "lcd_sine_shift":
+                return self.lcd_sine_shift(frame)
+            case "lcd_tan_shift":
+                return self.lcd_tan_shift(frame)
             case "kaleidoscope":
                 time_counter = time.time() - self.start_time
                 if int(time_counter) % 120 == 0: 
@@ -231,7 +234,7 @@ class ColorChaos:
         
         return distorted
     
-    def tan_distortion(self, frame, time=time.time(), wave_strength = 5 + 3 * math.sin(time.time() * 0.03) , smooth_factor=0.1, speed_factor=2.0):
+    def tan_distortion(self, frame, time=time.time(), wave_strength = 5 + 3 * math.tan(time.time() * 0.03) , smooth_factor=0.1, speed_factor=2.0):
         result_frame = frame.copy()
         h, w = result_frame.shape[:2]
 
@@ -246,7 +249,7 @@ class ColorChaos:
         y_coords, x_coords = np.indices((h, w))
         
         wave_x = np.tan(y_coords * 0.05 + smoothed_time) * wave_strength
-        wave_y = np.tanh(x_coords * 0.05 + smoothed_time) * wave_strength
+        wave_y = np.tan(x_coords * 0.05 + smoothed_time) * wave_strength
         
         map_x = np.clip(x_coords + wave_x, 0, w-1).astype(np.float32)
         map_y = np.clip(y_coords + wave_y, 0, h-1).astype(np.float32)
@@ -282,7 +285,7 @@ class ColorChaos:
     
         return cv.merge([b, g, r])
     
-    def lcd_shift(self, frame):
+    def lcd_sine_shift(self, frame):
         result_frame = frame.copy()
         h, w, _ = result_frame.shape
 
@@ -293,6 +296,25 @@ class ColorChaos:
 
         if shift_amount < 0:
             shift_amount = 5 + 12 * np.sin(time.time() - self.start_time * 0.01)
+            result_frame[y:y+h, x:x+w] = result_frame[y:y+h, x:x+w] * shift_amount
+        else :
+            result_frame[y:y+h, x:x+w] = result_frame[y:y+h, x:x+w] * shift_amount
+
+        result_frame[y:y+h, x:x+w] = np.roll(result_frame[y:y+h, x:x+w], shift_amount, axis = 1)
+
+        return result_frame
+    
+    def lcd_tan_shift(self, frame):
+        result_frame = frame.copy()
+        h, w, _ = result_frame.shape
+
+        x = 0
+        y = 0
+
+        shift_amount = 3 + 8 * np.tan(time.time() - self.start_time * 0.01)
+
+        if shift_amount < 0:
+            shift_amount = 5 + 12 * np.tan(time.time() - self.start_time * 0.01)
             result_frame[y:y+h, x:x+w] = result_frame[y:y+h, x:x+w] * shift_amount
         else :
             result_frame[y:y+h, x:x+w] = result_frame[y:y+h, x:x+w] * shift_amount
