@@ -99,13 +99,13 @@ def realtimeFilter(args):
         if is_window_open("Video Feed"):
             cv.imshow("Video Feed", processed_frame)
         else :
-            print("Terminated the video feed process.")
+            print(Fore.RED + Style.BRIGHT + "Terminated the video feed process.")
             break
 
         key = cv.waitKey(10) & 0xFF
 
         if key == ord('q'):
-            print("Q key detected!")
+            print(Fore.RED + Style.BRIGHT + "Q key detected!")
             break
         if key == ord('s'):
             effectManager.toggled = not effectManager.toggled
