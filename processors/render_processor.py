@@ -1,5 +1,8 @@
 import cv2 as cv
 import numpy as np
+from utils.console_logger import ConsoleLogger
+
+logger = ConsoleLogger()
 
 class RenderProcessor:
 
@@ -8,7 +11,7 @@ class RenderProcessor:
 
     def renderFrames(self, frames, output_path, fps):
         if not frames:
-            print("❌ No frames to export!")
+            logger.error("❌ No frames to export!")
             return False
 
         height, width = frames[0].shape[:2]
@@ -18,12 +21,12 @@ class RenderProcessor:
 
         out.set(cv.VIDEOWRITER_PROP_QUALITY, 80)
         
-        print(f"📹 Exporting {len(frames)} frames to {output_path}...")
+        logger.info(f"📹 Exporting {len(frames)} frames to {output_path}...")
         
         for i, frame in enumerate(frames):
             out.write(frame)
             if i % 30 == 0: 
-                print(f"📦 Frame {i}/{len(frames)}")
+                logger.info(f"📦 Frame {i}/{len(frames)}")
         
         out.release()
         return True

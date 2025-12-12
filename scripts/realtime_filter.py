@@ -19,24 +19,30 @@ def is_window_open(window_name):
         return False
 
 def realtimeFilter(args):
-    ASSETS_PATH = 'assets/video/'
+    # ------------------- Initialize managers from here -------------------
 
     effectManager = EffectManager()
+
+    # ------------------- Initialize utils from here -------------------
+
     logger = ConsoleLogger()
+
+    # ------------------- Initialize file from here -------------------
+    ASSETS_PATH = 'assets/video/'
 
     entries = os.listdir(ASSETS_PATH)
     files = [entry for entry in entries if os.path.isfile(os.path.join(ASSETS_PATH, entry))]
-    print("Files to be processed in assets folder : " + str(files))
+    logger.info("Files to be processed in assets folder : " + str(files))
 
     # I/O
     VIDEO_NAME_IO= str(input(Fore.BLUE + "Choose the video to process : "))
     
     if(VIDEO_NAME_IO + ".mp4" not in files):
-        print(Fore.RED + f"Error: Couldn't find the associated file '{VIDEO_NAME_IO}'. Please check the name, or configure proper assets path.")
+        logger.error(f"Couldn't find the associated file '{VIDEO_NAME_IO}'. Please check the name, or configure proper assets path.")
         return False
     else :
         VIDEO_PATH = ASSETS_PATH + VIDEO_NAME_IO + ".mp4"
-        print(Fore.GREEN + f"File found. Processing: {VIDEO_PATH}")
+        logger.success(f"File found. Processing: {VIDEO_PATH}")
 
     capture = cv.VideoCapture(VIDEO_PATH)
     width = int(capture.get(cv.CAP_PROP_FRAME_WIDTH))
@@ -75,7 +81,6 @@ def realtimeFilter(args):
         elapsed_time = time.time() - active_effect.start_time
         fps_cv = capture.get(cv.CAP_PROP_FPS)
         fps = len(active_effect.frames) // elapsed_time if elapsed_time > 0 else 0
-
 
         # <--------------------- Debugging text from here --------------------->
         

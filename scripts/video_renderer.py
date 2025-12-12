@@ -8,6 +8,7 @@ from datetime import datetime
 from colorama import Fore, Back, Style, init
 
 from effects.effect_manager import EffectManager
+from utils.console_logger import ConsoleLogger
 
 init(autoreset=True)
 
@@ -16,26 +17,7 @@ init(autoreset=True)
 from processors.render_processor import RenderProcessor
 
 def videoRenderer(args):
-    # ------------------- Initialize file from here -------------------
-
-    ASSETS_PATH = 'assets/video/'
-    FILENAME = "video_" + str(datetime.now().strftime("%Y_%m_%d_%H_%M_%S")) + ".mp4"
-
-    entries = os.listdir(ASSETS_PATH)
-    files = [entry for entry in entries if os.path.isfile(os.path.join(ASSETS_PATH, entry))]
-    print("Files to be processed in assets folder : " + str(files))
-
-    VIDEO_NAME_IO = input(str(Fore.BLUE + "Enter video name to process : "))
-
-    if(VIDEO_NAME_IO + ".mp4" not in files):
-        print(Fore.RED + f"Error: Couldn't find the associated file '{VIDEO_NAME_IO}'. Please check the name, or configure proper assets path.")
-        return False
-    else :
-        VIDEO_PATH = ASSETS_PATH + VIDEO_NAME_IO + ".mp4"
-        print(Fore.GREEN + f"File found. Processing: {VIDEO_PATH}")
-
-    capture = cv.VideoCapture(ASSETS_PATH + VIDEO_NAME_IO + ".mp4")
-
+    
     # ------------------- Initialize managers from here -------------------
 
     effectManager = EffectManager()
@@ -44,13 +26,37 @@ def videoRenderer(args):
 
     renderProcessor = RenderProcessor()
 
+    # ------------------- Initialize utils from here -------------------
+
+    logger = ConsoleLogger()
+
+    # ------------------- Initialize file from here -------------------
+
+    ASSETS_PATH = 'assets/video/'
+    FILENAME = "video_" + str(datetime.now().strftime("%Y_%m_%d_%H_%M_%S")) + ".mp4"
+
+    entries = os.listdir(ASSETS_PATH)
+    files = [entry for entry in entries if os.path.isfile(os.path.join(ASSETS_PATH, entry))]
+    logger.info("Files to be processed in assets folder : " + str(files))
+
+    VIDEO_NAME_IO = input(str(Fore.BLUE + "Enter video name to process : "))
+
+    if(VIDEO_NAME_IO + ".mp4" not in files):
+        logger.error(f"Couldn't find the associated file '{VIDEO_NAME_IO}'. Please check the name, or configure proper assets path.")
+        return False
+    else :
+        VIDEO_PATH = ASSETS_PATH + VIDEO_NAME_IO + ".mp4"
+        print(Fore.GREEN + f"File found. Processing: {VIDEO_PATH}")
+
+    capture = cv.VideoCapture(ASSETS_PATH + VIDEO_NAME_IO + ".mp4")
+
     if hasattr(args, "effects") and args.effects:
         effectManager.set_effect(args.effects[0])
     else:
-        print("No effects specified, using 'None' effect.")
+        logger.warn("No effects specified, using 'None' effect.")
         effectManager.effect_history.append("None")
 
-    print("⚡ Processing frames at MAXIMUM SPEED (no display)...")
+    logger.info("⚡ Processing frames at MAXIMUM SPEED (no display)...")
 
     frame_count = 0
 
@@ -68,7 +74,7 @@ def videoRenderer(args):
         if frame_count % 30 == 0:
             elapsed = time.time() - active_effect.start_time
             fps = frame_count / elapsed if elapsed > 0 else 0
-            print(f"📊 Processed {frame_count} frames ({fps:.1f} fps)")
+            logger.info(f"📊 Processed {frame_count} frames ({fps:.1f} fps)")
         
         try :
             active_effect = effectManager.get_active_effect()
@@ -84,7 +90,7 @@ def videoRenderer(args):
             line_number = exc_traceback.tb_lineno
             filename = exc_traceback.tb_frame.f_code.co_filename
 
-            print(f"Error : {error} in file {os.path.basename(filename)} : line number {line_number}")
+            logger.error(f"{error} in file {os.path.basename(filename)} : line number {line_number}")
             
 
         # <--------------------- Debugging text from here --------------------->
@@ -115,11 +121,11 @@ def videoRenderer(args):
 
     if active_effect.processed_frames:
         total_time = time.time() - active_effect.start_time
-        print(Fore.GREEN + Style.BRIGHT + f"✅ Processed {len(active_effect.processed_frames)} frames in {total_time:.2f}s")
-        print(Fore.GREEN + Style.BRIGHT + f"📹 Exporting at {len(active_effect.processed_frames)/total_time:.1f} fps...")
+        logger.info(f"✅ Processed {len(active_effect.processed_frames)} frames in {total_time:.2f}s")
+        logger.info(f"📹 Exporting at {len(active_effect.processed_frames)/total_time:.1f} fps...")
         renderProcessor.renderFrames(active_effect.processed_frames, "build/" + FILENAME, fps_cv)
-        print(Fore.GREEN + Style.BRIGHT + "🎬 Video exported: " + FILENAME)
+        logger.success("🎬 Video exported: " + FILENAME)
     else:
-        print(Fore.RED + Style.BRIGHT + "❌ No frames processed!")
+        logger.error("❌ No frames processed!")
 
-    print(Fore.GREEN + Style.BRIGHT + f"🎉 Done! Open {FILENAME} to see your masterpiece!")
+    logger.success(f"🎉 Done! Open {FILENAME} to see your masterpiece!")
