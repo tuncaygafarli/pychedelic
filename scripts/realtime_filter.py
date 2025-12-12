@@ -7,6 +7,7 @@ from datetime import datetime
 from colorama import Fore, Back, Style, init
 
 from effects.effect_manager import EffectManager
+from utils.console_logger import ConsoleLogger
 
 init(autoreset=True)
 
@@ -21,6 +22,7 @@ def realtimeFilter(args):
     ASSETS_PATH = 'assets/video/'
 
     effectManager = EffectManager()
+    logger = ConsoleLogger()
 
     entries = os.listdir(ASSETS_PATH)
     files = [entry for entry in entries if os.path.isfile(os.path.join(ASSETS_PATH, entry))]
@@ -65,6 +67,9 @@ def realtimeFilter(args):
         complexity = active_effect.calculate_complexity(frame)
         active_effect.add_frame(frame)
 
+        if args.debug:
+            logger.info("Current {active_effect.name} threshold has set to " + Fore.GREEN + Style.BRIGHT + str(active_effect.threshold))
+
         processed_frame = effectManager.process_frame(frame, complexity, args)
 
         elapsed_time = time.time() - active_effect.start_time
@@ -99,13 +104,14 @@ def realtimeFilter(args):
         if is_window_open("Video Feed"):
             cv.imshow("Video Feed", processed_frame)
         else :
-            print(Fore.RED + Style.BRIGHT + "Terminated the video feed process.")
+            if args.debug:
+                logger.terminate("Terminated the video process.")
             break
 
         key = cv.waitKey(10) & 0xFF
-
         if key == ord('q'):
-            print(Fore.RED + Style.BRIGHT + "Q key detected!")
+            if args.debug:
+                logger.terminate("Q key detected!")
             break
         if key == ord('s'):
             effectManager.toggled = not effectManager.toggled

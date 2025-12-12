@@ -10,6 +10,7 @@ from colorama import Fore, Back, Style, init
 init(autoreset=True)
 
 from effects.effect_manager import EffectManager
+from utils.console_logger import ConsoleLogger
 
 from processors.render_processor import RenderProcessor
 
@@ -22,6 +23,7 @@ def is_window_open(window_name):
 
 def webcamFilter(args):
     effectManager = EffectManager()
+    logger = ConsoleLogger()
 
     capture = cv.VideoCapture(0)
     capture.set(cv.CAP_PROP_FRAME_WIDTH, 640)
@@ -78,12 +80,14 @@ def webcamFilter(args):
         if is_window_open("Video Feed"):
             cv.imshow("Video Feed", processed_frame)
         else :
-            print(Fore.RED + Style.BRIGHT + "Terminated the video feed process.")
+            if args.debug:
+                logger.terminate("Terminated the video process.")
             break
 
         key = cv.waitKey(10) & 0xFF
         if key == ord('q'):
-            print(Fore.RED + Style.BRIGHT + "Q key detected!")
+            if args.debug:
+                logger.terminate("Q key detected!")
             break
         
         if key == ord('s'):
