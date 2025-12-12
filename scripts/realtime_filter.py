@@ -26,7 +26,13 @@ def realtimeFilter(args):
 
     # I/O
     VIDEO_NAME_IO= str(input("Choose the video to process : "))
-    VIDEO_PATH = ASSETS_PATH + VIDEO_NAME_IO + ".mp4"
+    
+    if(VIDEO_NAME_IO + ".mp4" not in files):
+        print(f"Error: Couldn't find the associated file '{VIDEO_NAME_IO}'. Please check the name, or configure proper assets path.")
+        return False
+    else :
+        VIDEO_PATH = ASSETS_PATH + VIDEO_NAME_IO + ".mp4"
+        print(f"File found. Processing: {VIDEO_PATH}")
 
     capture = cv.VideoCapture(VIDEO_PATH)
     width = int(capture.get(cv.CAP_PROP_FRAME_WIDTH))

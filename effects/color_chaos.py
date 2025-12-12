@@ -138,7 +138,8 @@ class ColorChaos:
         
         return distorted
     
-    def rgb_split(self, frame, offset):
+    def rgb_split(self, frame, offset=1):
+        offset = int(2 + math.sin(time.time() - self.start_time * 0.2) * 3) 
         b, g, r = cv.split(frame)
 
         b_shifted = np.roll(b, offset, axis=1)
