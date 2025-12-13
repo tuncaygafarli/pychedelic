@@ -103,10 +103,7 @@ class ColorChaos:
                 split_amount = int(2 + math.sin(time_counter * 0.2) * 3) 
                 return self.rgb_split(frame, split_amount)
             case "channel_shifting":
-                if random.random() < 0.1:
-                    return self.channel_shifting(frame)
-                else :
-                    return frame
+                return self.channel_shifting(frame)
             case "lcd_sine_shift":
                 return self.lcd_sine_shift(frame)
             case "lcd_tan_shift":
@@ -155,10 +152,7 @@ class ColorChaos:
                 split_amount = int(2 + math.sin(time_counter * 0.2) * 3) 
                 return self.rgb_split(frame, split_amount)
             case "channel_shifting":
-                if random.random() < 0.1:
-                    return self.channel_shifting(frame)
-                else :
-                    return frame
+                return frame
             case "lcd_sine_shift":
                 return self.lcd_sine_shift(frame)
             case "lcd_tan_shift":
