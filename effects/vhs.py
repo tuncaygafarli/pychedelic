@@ -88,13 +88,16 @@ class VHS:
 
     # <-------------------- VHS Noise -------------------->
 
-    def vhs_noise(self, frame):
-        h, w = frame.shape[:2]
+    def vhs_noise(self, frame, noise_level=5):
+        h, w, c = frame.shape
+        
+        frame_float = frame.astype(np.float32)
 
-        noise_mask = np.random.random((h, w)) < 0.01  # 1% pixels get noise
-        frame[noise_mask] = np.random.randint(0, 128, (np.sum(noise_mask), 3))
+        noise = np.random.uniform(-noise_level, noise_level, (h, w, c)).astype(np.float32)
+        
+        noisy_frame = frame_float + noise
 
-        return frame
+        return np.clip(noisy_frame, 0, 255).astype(np.uint8)
 
     # <-------------------- VHS Head Clog -------------------->
 
@@ -164,27 +167,50 @@ class VHS:
         map_y = (y_distorted * (h/2)) + h/2
 
         return cv.remap(frame, map_x.astype(np.float32), map_y.astype(np.float32), cv.INTER_LINEAR)
+    
+        
+    def vhs_gritty(self, frame):
+        hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
+        h, s, v = cv.split(hsv)
 
+        s = cv.multiply(s, 0.7)
+
+        alpha = 1.9
+        beta = -70
+
+        v = cv.convertScaleAbs(v, alpha=alpha, beta=beta)
+
+        final_hsv = cv.merge([h, s, v])
+        frame = cv.cvtColor(final_hsv, cv.COLOR_HSV2BGR)
+
+        b, g, r = cv.split(cv.cvtColor(cv.merge([h, s, v]), cv.COLOR_HSV2BGR))
+        r = cv.multiply(r, 0.9)
+        g = cv.multiply(g, 1.1)
+
+        frame = cv.GaussianBlur(cv.merge([b, g, r]), (5, 5), 0)
+        
+        return frame
+    
     # <-------------------- Dynamic Threshold Functions -------------------->
 
     def apply_vhs_complex(self, frame):
+        frame = self.vhs_gritty(frame)
         frame = self.vhs_scan_lines(frame)
         frame = self.vhs_color_bleeding(frame)
         frame = self.vhs_head_clog(frame)
-        frame = self.vhs_barrel_distortion(frame)
 
-        if random.random() < 0.000000000000005:
+        if random.random() < 0.015:
             frame = self.vhs_tape_damage(frame)
             frame = self.vhs_tape_glitch(frame)
 
         return frame
-
+ 
     def apply_vhs_simple(self, frame):
+        frame = self.vhs_gritty(frame)
         frame = self.vhs_scan_lines(frame)
         frame = self.vhs_color_bleeding(frame)
-        frame = self.vhs_barrel_distortion(frame)
 
-        if random.random() < 0.00000000001:
+        if random.random() < 0.005:
             frame = self.vhs_tape_damage(frame)
             frame = self.vhs_tape_glitch(frame)
 
