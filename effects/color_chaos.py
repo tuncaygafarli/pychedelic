@@ -98,10 +98,6 @@ class ColorChaos:
                 time_counter = time.time() - self.start_time
                 wave_strength = 5 + 3 * math.sin(time_counter * 0.03) 
                 return self.sine_distortion(frame, time_counter * 0.5, wave_strength)
-            case "tan_distortion":
-                time_counter = time.time() - self.start_time
-                wave_strength = 5 + 3 * math.sin(time_counter * 0.03) 
-                return self.sine_distortion(frame, time_counter * 0.5, wave_strength)
             case "rgb_split":
                 time_counter = time.time() - self.start_time
                 split_amount = int(2 + math.sin(time_counter * 0.2) * 3) 
@@ -151,10 +147,6 @@ class ColorChaos:
             case "hue_shift":
                 return self.hue_shift(frame)
             case "sine_distortion":
-                time_counter = time.time() - self.start_time
-                wave_strength = 5 + 3 * math.sin(time_counter * 0.03) 
-                return self.sine_distortion(frame, time_counter * 0.5, wave_strength)
-            case "tan_distortion":
                 time_counter = time.time() - self.start_time
                 wave_strength = 5 + 3 * math.sin(time_counter * 0.03) 
                 return self.sine_distortion(frame, time_counter * 0.5, wave_strength)
