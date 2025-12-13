@@ -45,6 +45,11 @@ def realtimeFilter(args):
         logger.success(f"File found. Processing: {VIDEO_PATH}")
 
     capture = cv.VideoCapture(VIDEO_PATH)
+
+    if not capture.isOpened():
+        logger.error(f"Failed to open video file: {VIDEO_PATH}")
+        return False
+    
     width = int(capture.get(cv.CAP_PROP_FRAME_WIDTH))
     height = int(capture.get(cv.CAP_PROP_FRAME_HEIGHT))
 
