@@ -5,6 +5,9 @@ import numpy as np
 import time
 from colorama import Fore, Back, Style, init
 
+from utils.normalizers import Normalizer
+
+normalizer = Normalizer()
 init(autoreset=True)
 
 class ColorChaos:
@@ -70,7 +73,6 @@ class ColorChaos:
     def _complex_frame_effect(self, frame, complexity): 
         if self.effect_duration <= 0:
             self.current_effect = random.choice(['channel_swap', 
-                                                 'color_blast', 
                                                  'psychedelic_master', 
                                                  'hue_shift',
                                                  'sine_distortion',
@@ -87,8 +89,6 @@ class ColorChaos:
         match self.current_effect:
             case "channel_swap":
                 return self.channel_swap(frame)
-            case "color_blast":
-                return self.color_blast(frame, complexity)
             case "psychedelic_master":
                 time_counter = time.time() - self.start_time
                 return self.psychedelic_master(frame, time_counter)
@@ -172,7 +172,11 @@ class ColorChaos:
         random.shuffle(channels)
         return cv.merge(channels) 
     
-    def color_blast(self, frame, complexity):
+    def color_blast(self, frame, complexity=None):
+        if complexity is None or self.threshold == 0:
+            complexity = self.complexities[-1]
+            self.threshold = 1
+        
         result_frame = frame.copy()
         intensity = min(0.3, complexity / (self.threshold * 8))
     
