@@ -64,7 +64,7 @@ def videoRenderer(args):
         isTrue, frame = capture.read()  
 
         fps_cv = capture.get(cv.CAP_PROP_FPS)
-        max_frames = int (fps_cv * 30)
+        max_frames = int (fps_cv * 60)
 
         if not isTrue or frame_count >= max_frames: 
             break
