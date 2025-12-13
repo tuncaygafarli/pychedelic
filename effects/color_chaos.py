@@ -74,9 +74,11 @@ class ColorChaos:
                                                  'psychedelic_master', 
                                                  'hue_shift',
                                                  'sine_distortion',
+                                                 'tan_distortion'
                                                  'rgb_split',
                                                  'channel_shifting',
-                                                 'lcd_shift',
+                                                 'lcd_sine_shift',
+                                                 'lcd_tan_shift',
                                                  'kaleidoscope'
                                                  ])
             self.effect_duration = random.randint(30, 60)
@@ -97,6 +99,10 @@ class ColorChaos:
                 time_counter = time.time() - self.start_time
                 wave_strength = 5 + 3 * math.sin(time_counter * 0.03) 
                 return self.sine_distortion(frame, time_counter * 0.5, wave_strength)
+            case "tan_distortion":
+                time_counter = time.time() - self.start_time
+                wave_strength = 5 + 3 * math.sin(time_counter * 0.03) 
+                return self.sine_distortion(frame, time_counter * 0.5, wave_strength)
             case "rgb_split":
                 time_counter = time.time() - self.start_time
                 split_amount = int(2 + math.sin(time_counter * 0.2) * 3) 
@@ -106,8 +112,10 @@ class ColorChaos:
                     return self.channel_shifting(frame)
                 else :
                     return frame
-            case "lcd_shift":
-                return self.lcd_shift(frame)
+            case "lcd_sine_shift":
+                return self.lcd_sine_shift(frame)
+            case "lcd_tan_shift":
+                return self.lcd_tan_shift(frame)
             case "kaleidoscope":
                 time_counter = time.time() - self.start_time
                 if int(time_counter) % 120 == 0: 
