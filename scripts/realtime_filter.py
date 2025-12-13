@@ -70,8 +70,12 @@ def realtimeFilter(args):
         ret, frame = capture.read()
 
         if not ret:
-            capture.set(cv.CAP_PROP_POS_FRAMES, 0)
-            continue
+            logger.info("Stream ended or failed to read frame.")
+            if capture.get(cv.CAP_PROP_POS_FRAMES) > 0:
+                capture.set(cv.CAP_PROP_POS_FRAMES, 0) # Rewind video
+                continue
+            else:
+                break
 
         active_effect = effectManager.get_active_effect()
 

@@ -172,7 +172,7 @@ class ColorChaos:
             case "lcd_sine_shift":
                 return self.lcd_sine_shift(frame)
             case "lcd_tan_shift":
-                return self.lcd_tan_shift(frame)
+                 return self.lcd_tan_shift(frame)
             case "kaleidoscope":
                 time_counter = time.time() - self.start_time
                 if int(time_counter) % 120 == 0: 
@@ -370,7 +370,7 @@ class ColorChaos:
     def psychedelic_master(self, frame, time_counter):
         result = frame.copy()
 
-        result = self.lcd_shift(result)
+        result = self.lcd_sine_shift(result)
 
         result = self.hue_shift(result) 
         
