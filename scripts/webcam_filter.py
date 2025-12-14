@@ -79,7 +79,7 @@ def webcamFilter(args):
                 cv.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
         
         if is_window_open("Video Feed"):
-            cv.imshow("Video Feed", processed_frame)
+            cv.imshow("Video Feed", cv.flip(processed_frame, 1))
         else :
             if args.debug:
                 logger.terminate("Terminated the video process.")
