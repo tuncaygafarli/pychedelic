@@ -55,7 +55,7 @@ def webcamFilter(args):
         fps = len(active_effect.frames) // elapsed_time if elapsed_time > 0 else 0
 
         if args.debug:
-            logger.info("Current {active_effect.name} threshold has set to " + Fore.GREEN + Style.BRIGHT + str(active_effect.threshold))
+            logger.info(f"Current {active_effect.name} threshold has set to " + Fore.GREEN + Style.BRIGHT + str(active_effect.threshold))
 
             cv.putText(processed_frame, "TIME PASSED : " + str(round(elapsed_time, 2)) + " SECONDS", (50, 50), 
                 cv.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)

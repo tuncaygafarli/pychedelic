@@ -90,7 +90,7 @@ def realtimeFilter(args):
         # <--------------------- Debugging text from here --------------------->
         
         if args.debug:
-            logger.info("Current {active_effect.name} threshold has set to " + Fore.GREEN + Style.BRIGHT + str(active_effect.threshold))
+            logger.info(f"Current {active_effect.name} threshold has set to " + Fore.GREEN + Style.BRIGHT + str(active_effect.threshold))
 
             cv.putText(processed_frame, "TIME PASSED : " + str(round(elapsed_time, 2)) + " SECONDS", (10, 50), 
                 cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
