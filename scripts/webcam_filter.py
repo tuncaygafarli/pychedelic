@@ -48,7 +48,6 @@ def webcamFilter(args):
 
         complexity = active_effect.calculate_complexity(frame)
         active_effect.add_frame(frame)
-
         processed_frame = effectManager.process_frame(frame, complexity, args)
 
         elapsed_time = time.time() - active_effect.start_time
@@ -56,6 +55,8 @@ def webcamFilter(args):
         fps = len(active_effect.frames) // elapsed_time if elapsed_time > 0 else 0
 
         if args.debug:
+            logger.info("Current {active_effect.name} threshold has set to " + Fore.GREEN + Style.BRIGHT + str(active_effect.threshold))
+
             cv.putText(processed_frame, "TIME PASSED : " + str(round(elapsed_time, 2)) + " SECONDS", (50, 50), 
                 cv.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
             cv.putText(processed_frame, "FPS : " + str(round(fps_cv, 2)), (50, 100), 
@@ -75,7 +76,7 @@ def webcamFilter(args):
                         cv.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
 
             cv.putText(processed_frame, f"EFFECT: {effectManager.effect_history[-1].name}", (50, 350), 
-                cv.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 1)
+                cv.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
         
         if is_window_open("Video Feed"):
             cv.imshow("Video Feed", processed_frame)
