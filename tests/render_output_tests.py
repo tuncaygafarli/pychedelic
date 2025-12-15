@@ -9,7 +9,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Import classes
 from modules.tracker import Tracker
-from modules.color_chaos import ColorChaosManipulator
+from modules.color_chaos import ColorChaos
+from utils.console_logger import ConsoleLogger
 from processors.render_processor import RenderProcessor
 from modules.module_manager import ModuleManager
 
@@ -21,7 +22,8 @@ VIDEO_NAME_IO = input(str("Enter video name to process : "))
 capture = cv.VideoCapture(ASSETS_PATH + VIDEO_NAME_IO + ".mp4")
 
 tracker = Tracker()
-cc_manipulator = ColorChaosManipulator()
+cc_manipulator = ColorChaos()
+logger = ConsoleLogger()
 
 renderProcessor = RenderProcessor()
 
