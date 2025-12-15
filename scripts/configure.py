@@ -56,5 +56,5 @@ class Configure():
         if not os.path.exists(CONFIG_FILE):
             logger.error("Failed to save config file, please run" + Fore.GREEN + "python cli.py --init")
         
-        with open(CONFIG_FILE, 'r') as f:
+        with open(CONFIG_FILE, 'w') as f:
             yaml.dump(config_data, f, default_flow_style=False, sort_keys=False)

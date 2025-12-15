@@ -101,12 +101,10 @@ def main():
         config = configure.load_config()
 
         if key == "assets_video":
-            abs_path = os.path.abspath(value)
-
             if 'assets' not in config:
                 config['assets'] = {}
             
-            config['assets']['assets_video'] = abs_path
+            config['assets']['assets_video'] = value
             
             configure.save_config(config)
             print(f"✅ Configuration updated!")
