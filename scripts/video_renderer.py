@@ -8,6 +8,7 @@ from datetime import datetime
 from colorama import Fore, Back, Style, init
 
 from modules.module_manager import ModuleManager
+from scripts.configure import Configure
 from utils.console_logger import ConsoleLogger
 
 init(autoreset=True)
@@ -21,6 +22,9 @@ def videoRenderer(args):
     # ------------------- Initialize managers from here -------------------
 
     moduleManager = ModuleManager()
+    configure = Configure()
+    config = configure.load_config()    
+    ASSETS_PATH = config["assets"]["assets_video"]
 
     # ------------------- Initialize processors from here -------------------
 
@@ -30,9 +34,8 @@ def videoRenderer(args):
 
     logger = ConsoleLogger()
 
-    # ------------------- Initialize file from here -------------------
+    # ------------------- Initialize I/O from here -------------------
 
-    ASSETS_PATH = 'assets/video/'
     FILENAME = "video_" + str(datetime.now().strftime("%Y_%m_%d_%H_%M_%S")) + ".mp4"
 
     entries = os.listdir(ASSETS_PATH)

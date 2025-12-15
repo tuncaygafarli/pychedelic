@@ -7,6 +7,7 @@ from datetime import datetime
 from colorama import Fore, Back, Style, init
 
 from modules.module_manager import ModuleManager
+from scripts.configure import Configure
 from utils.console_logger import ConsoleLogger
 
 init(autoreset=True)
@@ -19,16 +20,18 @@ def is_window_open(window_name):
         return False
 
 def realtimeFilter(args):
-    # ------------------- Initialize managers from here -------------------
+    # ------------------- Initialize managers / file configurations from here -------------------
 
     moduleManager = ModuleManager()
-
+    configure = Configure()
+    config = configure.load_config()    
+    ASSETS_PATH = config["assets"]["assets_video"]
+    
     # ------------------- Initialize utils from here -------------------
 
     logger = ConsoleLogger()
 
-    # ------------------- Initialize file from here -------------------
-    ASSETS_PATH = 'assets/video/'
+    # ------------------- Initialize I/O from here -------------------
 
     entries = os.listdir(ASSETS_PATH)
     files = [entry for entry in entries if os.path.isfile(os.path.join(ASSETS_PATH, entry))]
@@ -43,6 +46,7 @@ def realtimeFilter(args):
     else :
         VIDEO_PATH = ASSETS_PATH + VIDEO_NAME_IO + ".mp4"
         logger.success(f"File found. Processing: {VIDEO_PATH}")
+    print(VIDEO_PATH)
 
     capture = cv.VideoCapture(VIDEO_PATH)
 

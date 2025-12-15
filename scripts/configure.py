@@ -1,0 +1,60 @@
+import yaml
+import os
+import subprocess
+from colorama import Fore, Style, Back, init
+
+from utils.console_logger import ConsoleLogger
+
+CONFIG_FILE = "config.yaml"
+
+logger = ConsoleLogger()
+init(autoreset=True)
+
+class Configure():
+    def __init__(self):
+        pass
+
+    def init(self):
+        default_config = {
+        'assets': {
+            'assets_video': 'assets/video/',
+            'assets_audio': 'assets/audio/',
+            'build_dir': 'build'
+        }
+    }
+        try:
+            with open(CONFIG_FILE, 'w') as file:
+                yaml.dump(default_config, file, default_flow_style=False, sort_keys=False)
+                
+            print(f"✅ Successfully created default configuration file: '{CONFIG_FILE}'.")
+            return default_config
+        
+        except IOError as e:
+            print(f"❌ An error occurred while writing the file: {e}")
+            
+        except yaml.YAMLError as e:
+            print(f"❌ YAML processing error: {e}")
+
+    def load_config(self):
+        try :
+            with open(CONFIG_FILE, 'r') as f:
+                return yaml.safe_load(f)
+            
+        except FileNotFoundError:
+            logger.error(f"Configuration file '{CONFIG_FILE}' not found. Running " + Fore.GREEN + "python cli.py --init " + Fore.RED + "to initialize configuration.")
+            return self.init()
+        
+        except yaml.YAMLError as e:
+            logger.error(f"Configuration file is corrupted (YAML Error: {e}).")
+            return None
+        
+        except Exception as e:
+            logger.error(f"Failed to load config file due to an unknown error: {e}")
+            return None
+        
+    def save_config(self, config_data):
+        if not os.path.exists(CONFIG_FILE):
+            logger.error("Failed to save config file, please run" + Fore.GREEN + "python cli.py --init")
+        
+        with open(CONFIG_FILE, 'r') as f:
+            yaml.dump(config_data, f, default_flow_style=False, sort_keys=False)
