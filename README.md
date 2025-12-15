@@ -166,8 +166,9 @@ python cli.py --init
 | Command | Purpose |
 | :--- | :--- |
 | `python cli.py --mode live` | Starts the program using the default configuration (e.g., webcam ID 0, default module/effect). |
-| `python cli.py --mode render --modules VHS` | Processes a video file using the specified module (e.g., applies VHS effects to the default video). |
-| `python cli.py --list modules` | Lists available processing modules (e.g., VHS, Tracker, Glitch). |
+| `python cli.py --mode render --modules VHS` | Processes a video file using the specified module (e.g., applies all of the VHS effects to the default video). |
+| `python cli.py --list modules` | Lists available processing modules (e.g., VHS, Tracker, ColorChaos). |
+| `python cli.py --list effects` | Lists available processing effects of modules (e.g., rgb_split, vhs_barrel_distortion). |
 
 ### Deactivating (When Finished)
 When you are done working on the project, simply run:
