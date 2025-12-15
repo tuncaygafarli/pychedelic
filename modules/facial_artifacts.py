@@ -6,7 +6,7 @@ import random
 from colorama import Fore, Back, Style, init
 
 from processors.face_detection import FaceDetector
-from effects.color_chaos import ColorChaos
+from modules.color_chaos import ColorChaos
 
 faceDetector = FaceDetector()
 color_chaos = ColorChaos()

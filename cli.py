@@ -5,15 +5,15 @@ import subprocess
 import sys
 from datetime import datetime
 
-from effects.tracker import Tracker
-from effects.color_chaos import ColorChaos
+from modules.tracker import Tracker
+from modules.color_chaos import ColorChaos
 from processors.render_processor import RenderProcessor
 
 from scripts.video_renderer import videoRenderer
 from scripts.realtime_filter import realtimeFilter
 from scripts.webcam_filter import webcamFilter
+from scripts.module_lister import listModules
 from scripts.effect_lister import listEffects
-from scripts.function_lister import listFunctions
 
 # ---------------------- Argument parser implementation below here ----------------------
 
@@ -40,14 +40,14 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    "-effects", "--effects", 
+    "-modules", "--modules", 
     nargs='+',
     choices=['Tracker','ColorChaos', 'VHS',"NightVision",'FacialArtifacts','FaceBlur','EyeBlur','ChromaticAberration','Grunge','None'], 
     help="Chooses effects to be applied"
 )
 
 parser.add_argument(
-    "-functions", "--functions",
+    "-effects", "--effects",
     nargs='*', 
     help="Specific functions to call (e.g., face_blur psychedelic_eye_shift)"
 )
@@ -55,7 +55,7 @@ parser.add_argument(
 parser.add_argument(
     "-list", "--list", 
     type=str,
-    choices=["effects","functions"],
+    choices=["modules","effects"],
     help="Lists the given argument"
 )
 
@@ -73,9 +73,9 @@ elif hasattr(args, "mode") and args.mode == "render":
     videoRenderer(args)
 elif hasattr(args, "mode") and args.mode == "webcam":
     webcamFilter(args)
+elif hasattr(args, "list") and args.list == "modules":
+    listModules(args)
 elif hasattr(args, "list") and args.list == "effects":
-    listEffects(args)
-elif hasattr(args, "list") and args.list == "functions":
     listFunctions(args)
 else :
     print("Undefined argument!")

@@ -7,8 +7,8 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Import classes
 
-from effects.tracker import Calibrator
-from effects.color_chaos import ColorChaosManipulator
+from modules.tracker import Calibrator
+from modules.color_chaos import ColorChaosManipulator
 
 from processors.render_processor import RenderProcessor
 

@@ -3,7 +3,7 @@ from .color_chaos import ColorChaos
 from .facial_artifacts import FacialArtifacts
 from .grunge import Grunge
 from .night_vision import NightVision
-from .none_effect import NoneEffect
+from .none import NoneModule
 from .tracker import Tracker
 from .vhs import VHS
 
@@ -13,7 +13,7 @@ __all__ = [
     'FacialArtifacts',
     'Grunge',
     'NightVision',
-    'NoneEffect',
+    'NoneModule',
     'Tracker',
     'VHS',
 ]

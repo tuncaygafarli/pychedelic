@@ -9,7 +9,7 @@ from colorama import Fore, Back, Style, init
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-class NoneEffect:
+class NoneModule:
     def __init__(self):
         self.name = "None Effect"
 

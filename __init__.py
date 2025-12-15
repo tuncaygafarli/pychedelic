@@ -7,16 +7,16 @@ __author__ = "Tuncay Gafarli"
 __license__ = "MIT"
 
 # Core exports
-from effects.effect_manager import EffectManager
+from modules.module_manager import ModuleManager
 
 # Convenience imports
-from . import effects
+from . import modules
 from . import processors
 from . import utils
 
 __all__ = [
-    'EffectManager',
-    'effects',
+    'ModuleManager',
+    'modules',
     'processors',
     'utils'
 ]

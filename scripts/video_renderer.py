@@ -7,7 +7,7 @@ import sys
 from datetime import datetime
 from colorama import Fore, Back, Style, init
 
-from effects.effect_manager import EffectManager
+from modules.module_manager import ModuleManager
 from utils.console_logger import ConsoleLogger
 
 init(autoreset=True)
@@ -20,7 +20,7 @@ def videoRenderer(args):
     
     # ------------------- Initialize managers from here -------------------
 
-    effectManager = EffectManager()
+    moduleManager = ModuleManager()
 
     # ------------------- Initialize processors from here -------------------
 
@@ -50,11 +50,11 @@ def videoRenderer(args):
 
     capture = cv.VideoCapture(ASSETS_PATH + VIDEO_NAME_IO + ".mp4")
 
-    if hasattr(args, "effects") and args.effects:
-        effectManager.set_effect(args.effects[0])
+    if hasattr(args, "modules"):
+        moduleManager.set_module(args.modules[0])
     else:
         logger.warn("No effects specified, using 'None' effect.")
-        effectManager.effect_history.append("None")
+        moduleManager.module_history.append("None")
 
     logger.info("⚡ Processing frames at MAXIMUM SPEED (no display)...")
 
@@ -72,19 +72,19 @@ def videoRenderer(args):
         frame_count += 1
         
         if frame_count % 30 == 0:
-            elapsed = time.time() - active_effect.start_time
+            elapsed = time.time() - active_module.start_time
             fps = frame_count / elapsed if elapsed > 0 else 0
             logger.info(f"📊 Processed {frame_count} frames ({fps:.1f} fps)")
         
         try :
-            active_effect = effectManager.get_active_effect()
-            elapsed_time = time.time() - active_effect.start_time
+            active_module = moduleManager.get_active_module()
+            elapsed_time = time.time() - active_module.start_time
 
-            complexity = active_effect.calculate_complexity(frame)
-            active_effect.add_frame(frame)
+            complexity = active_module.calculate_complexity(frame)
+            active_module.add_frame(frame)
 
-            processed_frame = effectManager.process_frame(frame, complexity, args)
-            active_effect.processed_frames.append(processed_frame)
+            processed_frame = moduleManager.process_frame(frame, complexity, args)
+            active_module.processed_frames.append(processed_frame)
         except Exception as error:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             line_number = exc_traceback.tb_lineno
@@ -103,27 +103,27 @@ def videoRenderer(args):
             cv.putText(processed_frame, "COMPLEXITY : " + str(round(complexity, 2)), (50, 150), 
                 cv.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
             
-            if active_effect.threshold is not None:
-                cv.putText(processed_frame, "THRESHOLD : " + str(round(active_effect.threshold, 2)), (50, 200), 
+            if active_module.threshold is not None:
+                cv.putText(processed_frame, "THRESHOLD : " + str(round(active_module.threshold, 2)), (50, 200), 
                     cv.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
                 
-                if complexity > active_effect.threshold:
+                if complexity > active_module.threshold:
                     cv.putText(processed_frame, "CALIBRATED FRAME", (50, 300), 
                         cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
                 else:
                     cv.putText(processed_frame, "UNPROCESSED FRAME", (50, 300), 
                         cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
-            cv.putText(processed_frame, f"EFFECT: {effectManager.effect_history[-1].name}", (50, 350), 
+            cv.putText(processed_frame, f"EFFECT: {moduleManager.module_history[-1].name}", (50, 350), 
                 cv.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)  
 
     capture.release()
 
-    if active_effect.processed_frames:
-        total_time = time.time() - active_effect.start_time
-        logger.info(f"✅ Processed {len(active_effect.processed_frames)} frames in {total_time:.2f}s")
-        logger.info(f"📹 Exporting at {len(active_effect.processed_frames)/total_time:.1f} fps...")
-        renderProcessor.renderFrames(active_effect.processed_frames, "build/" + FILENAME, fps_cv)
+    if active_module.processed_frames:
+        total_time = time.time() - active_module.start_time
+        logger.info(f"✅ Processed {len(active_module.processed_frames)} frames in {total_time:.2f}s")
+        logger.info(f"📹 Exporting at {len(active_module.processed_frames)/total_time:.1f} fps...")
+        renderProcessor.renderFrames(active_module.processed_frames, "build/" + FILENAME, fps_cv)
         logger.success("🎬 Video exported: " + FILENAME)
     else:
         logger.error("❌ No frames processed!")

@@ -8,8 +8,8 @@ from datetime import datetime
 
 from modules.module_manager import ModuleManager
 
-def listEffects(args):
+def listModules(args):
     ModuleManager = ModuleManager()
 
     for effect, functions in ModuleManager.effects_functions.items():
-        print(f"{effect} - {functions}\n")
+        print(f"{effect}")

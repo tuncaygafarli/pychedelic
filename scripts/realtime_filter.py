@@ -6,7 +6,7 @@ import os
 from datetime import datetime
 from colorama import Fore, Back, Style, init
 
-from effects.effect_manager import EffectManager
+from modules.module_manager import ModuleManager
 from utils.console_logger import ConsoleLogger
 
 init(autoreset=True)
@@ -21,7 +21,7 @@ def is_window_open(window_name):
 def realtimeFilter(args):
     # ------------------- Initialize managers from here -------------------
 
-    effectManager = EffectManager()
+    moduleManager = ModuleManager()
 
     # ------------------- Initialize utils from here -------------------
 
@@ -53,10 +53,10 @@ def realtimeFilter(args):
     width = int(capture.get(cv.CAP_PROP_FRAME_WIDTH))
     height = int(capture.get(cv.CAP_PROP_FRAME_HEIGHT))
 
-    # <--------------------- EffectManager setting effect from here --------------------->
+    # <--------------------- moduleManager setting effect from here --------------------->
 
-    if hasattr(args, "effects"):
-        effectManager.set_effect(args.effects[0])
+    if hasattr(args, "modules"):
+        moduleManager.set_module(args.modules[0])
     else:
         print("Undefined argument.")
         return -1
@@ -77,20 +77,20 @@ def realtimeFilter(args):
             else:
                 break
 
-        active_effect = effectManager.get_active_effect()
+        active_module = moduleManager.get_active_module()
 
-        complexity = active_effect.calculate_complexity(frame)
-        active_effect.add_frame(frame)
-        processed_frame = effectManager.process_frame(frame, complexity, args)
+        complexity = active_module.calculate_complexity(frame)
+        active_module.add_frame(frame)
+        processed_frame = moduleManager.process_frame(frame, complexity, args)
 
-        elapsed_time = time.time() - active_effect.start_time
+        elapsed_time = time.time() - active_module.start_time
         fps_cv = capture.get(cv.CAP_PROP_FPS)
-        fps = len(active_effect.frames) // elapsed_time if elapsed_time > 0 else 0
+        fps = len(active_module.frames) // elapsed_time if elapsed_time > 0 else 0
 
         # <--------------------- Debugging text from here --------------------->
         
         if args.debug:
-            logger.info(f"Current {active_effect.name} threshold has set to " + Fore.GREEN + Style.BRIGHT + str(active_effect.threshold))
+            logger.info(f"Current {active_module.name} threshold has set to " + Fore.GREEN + Style.BRIGHT + str(active_module.threshold))
 
             cv.putText(processed_frame, "TIME PASSED : " + str(round(elapsed_time, 2)) + " SECONDS", (10, 50), 
                 cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
@@ -99,18 +99,18 @@ def realtimeFilter(args):
             cv.putText(processed_frame, "COMPLEXITY : " + str(round(complexity, 2)), (10, 150), 
                 cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
             
-            if active_effect.threshold is not None:
-                cv.putText(processed_frame, "THRESHOLD : " + str(round(active_effect.threshold, 2)), (10, 200), 
+            if active_module.threshold is not None:
+                cv.putText(processed_frame, "THRESHOLD : " + str(round(active_module.threshold, 2)), (10, 200), 
                     cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
                 
-                if complexity > active_effect.threshold:
+                if complexity > active_module.threshold:
                     cv.putText(processed_frame, "CALIBRATED FRAME", (10, 300), 
                         cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
                 else:
                     cv.putText(processed_frame, "UNPROCESSED FRAME", (10, 300), 
                         cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
                     
-            cv.putText(processed_frame, f"EFFECT: {effectManager.effect_history[-1].name}", (10, 350), 
+            cv.putText(processed_frame, f"EFFECT: {moduleManager.effect_history[-1].name}", (10, 350), 
                 cv.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
 
         if is_window_open("Video Feed"):
@@ -126,7 +126,7 @@ def realtimeFilter(args):
                 logger.terminate("Q key detected!")
             break
         if key == ord('s'):
-            effectManager.toggled = not effectManager.toggled
+            moduleManager.toggled = not moduleManager.toggled
             continue
         if key == ord('d'):
             args.debug = not args.debug
