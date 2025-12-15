@@ -1,6 +1,6 @@
 from colorama import Style, Fore, Back, init
 
-init(autoreset=True) 
+init(autoreset=True)
 
 class ConsoleLogger:
     def __init__(self):
@@ -19,18 +19,18 @@ class ConsoleLogger:
     def _log(self, prefix, color, message):
         """Internal helper to structure and print messages."""
         print(prefix + color + message)
-    
+
     def info(self, message):
         self._log(self.INFO_PREFIX, self.INFO_COLOR, message)
 
     def success(self, message):
         self._log(self.SUCCESS_PREFIX, self.SUCCESS_COLOR, message)
-    
+
     def warn(self, message):
         self._log(self.WARNING_PREFIX, self.WARNING_COLOR, message)
-    
+
     def error(self, message):
         self._log(self.ERROR_PREFIX, self.ERROR_COLOR, message)
-    
+
     def terminate(self, message):
         self._log(self.TERMINATION_PREFIX, self.TERMINATION_COLOR, message)
