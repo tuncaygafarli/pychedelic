@@ -26,14 +26,14 @@ class Configure():
             with open(CONFIG_FILE, 'w') as file:
                 yaml.dump(default_config, file, default_flow_style=False, sort_keys=False)
                 
-            print(f"✅ Successfully created default configuration file: '{CONFIG_FILE}'.")
+            logger.success(f"✅ Successfully created default configuration file: '{CONFIG_FILE}'.")
             return default_config
         
         except IOError as e:
-            print(f"❌ An error occurred while writing the file: {e}")
+            logger.error(f"An error occurred while writing the file: {e}")
             
         except yaml.YAMLError as e:
-            print(f"❌ YAML processing error: {e}")
+            logger.error(f"YAML processing error: {e}")
 
     def load_config(self):
         try :

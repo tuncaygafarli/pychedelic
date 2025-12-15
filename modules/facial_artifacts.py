@@ -8,9 +8,11 @@ from colorama import Fore, Back, Style, init
 from processors.face_detection import FaceDetector
 from scripts.configure import Configure
 from modules.color_chaos import ColorChaos
+from utils.console_logger import ConsoleLogger
 
 faceDetector = FaceDetector()
 color_chaos = ColorChaos()
+logger = ConsoleLogger()
 configure = Configure()
 
 config = configure.load_config()
@@ -154,7 +156,7 @@ class FacialArtifacts:
                         break
 
                 if img is None:
-                    print(f"Error: Could not load image {self.stored_image_path} with any common extension")
+                    logger.error(f"Error: Could not load image {self.stored_image_path} with any common extension")
                     continue
 
                 img_resized = cv.resize(img, (w, h))
@@ -165,7 +167,7 @@ class FacialArtifacts:
                 result_frame[y:y+h, x:x+w] = blended_region
 
             except Exception as e:
-                print(f"Error applying face filter: {e}")
+                logger.error(f"Error applying face filter: {e}")
                 continue
 
         return result_frame

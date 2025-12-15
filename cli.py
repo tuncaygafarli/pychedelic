@@ -5,17 +5,17 @@ import os
 import sys
 from datetime import datetime
 
-from modules.tracker import Tracker
-from modules.color_chaos import ColorChaos
-from processors.render_processor import RenderProcessor
+from utils.console_logger import ConsoleLogger
 
 from scripts.video_renderer import videoRenderer
 from scripts.realtime_filter import realtimeFilter
 from scripts.webcam_filter import webcamFilter
 from scripts.module_lister import listModules
 from scripts.effect_lister import listEffects
+
 from scripts.configure import Configure
 
+logger = ConsoleLogger()
 configure = Configure()
 
 # ---------------------- Argument parser implementation below here ----------------------
@@ -107,10 +107,10 @@ def main():
             config['assets']['assets_video'] = value
             
             configure.save_config(config)
-            print(f"✅ Configuration updated!")
+            logger.success(f"✅ Configuration updated!")
 
     else :
-        print("Undefined argument!")
+        logger.error("Undefined argument!")
 
 if __name__ == "__main__":
     main()
