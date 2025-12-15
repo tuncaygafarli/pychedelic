@@ -133,7 +133,7 @@ pip install -r requirements.txt
 It is highly recommended to use a Python virtual environment to isolate your project's dependencies and avoid conflicts with system-wide packages.
 ### Creating the Virtual Environment
 Use the `venv` module, which is built into standard Python installations.
-After creation, you must activate the environment before installing any packages (like `PyYAML`). Your shell prompt will usually change to show the environment name (e.g., (`venv`)).
+After creation, you must activate the environment before installing any packages (see the all of core dependencies list in `requirements.txt`). Your shell prompt will usually change to show the environment name (e.g., (`venv`)).
 | Operating System | Command | Notes |
 | :--- | :--- | :--- |
 | **Windows** | `python -m venv C:\path\to\your\project\venv` | Use the full path for clarity. `venv` is often the directory name. |
