@@ -31,7 +31,7 @@ apply_calibration = str(input("Apply calibration? Y or N : "))
 
 output_frames = []
 
-print("⚡ Processing frames at MAXIMUM SPEED (no display)...")
+logger.success("⚡ Processing frames at MAXIMUM SPEED (no display)...")
 
 frame_count = 0
 start_time = time.time()
