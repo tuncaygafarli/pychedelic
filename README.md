@@ -129,7 +129,56 @@ pip install -r requirements.txt
 ```
 
 ## Quick Start
+
+It is highly recommended to use a Python virtual environment to isolate your project's dependencies and avoid conflicts with system-wide packages.
+### Creating the Virtual Environment
+Use the `venv` module, which is built into standard Python installations.
+After creation, you must activate the environment before installing any packages (like `PyYAML`). Your shell prompt will usually change to show the environment name (e.g., (`venv`)).
+| Operating System | Command | Notes |
+| :--- | :--- | :--- |
+| **Windows** | `python -m venv C:\path\to\your\project\venv` | Use the full path for clarity. `venv` is often the directory name. |
+| **Linux / macOS** | `python3 -m venv venv` | We assume `python3` is the executable. Creates a local folder named `venv`. |
+
+---
+
+### Activating the Environment
+
+| Operating System | Command |
+| :--- | :--- |
+| **Windows (Command Prompt / CMD)** | `C:\path\to\your\project\venv\Scripts\activate.bat` |
+| **Windows (PowerShell)** | `C:\path\to\your\project\venv\Scripts\Activate.ps1` |
+| **Linux / macOS** | `source venv/bin/activate` |
+
+### Installing dependencies
+First, make sure the required packages for your engine are installed inside the new environment:
+```bash
+pip install -r requirements.txt
+```
+
+### Initialize Configuration
+If your `config.yaml` file is missing, you'll need to run your initialization command:
+```bash
+python cli.py --init
+```
+
+### Run Your Engine Modes
+
+| Command | Purpose |
+| :--- | :--- |
+| `python cli.py --mode live` | Starts the program using the default configuration (e.g., webcam ID 0, default module/effect). |
+| `python cli.py --mode render --modules VHS` | Processes a video file using the specified module (e.g., applies VHS effects to the default video). |
+| `python cli.py --list modules` | Lists available processing modules (e.g., VHS, Tracker, Glitch). |
+
+### Deactivating (When Finished)
+When you are done working on the project, simply run:
+
+```bash
+deactivate
+```
+This returns you to your global system Python environment.
+
 ### Real-Time Video Processing
+Inside the virtual environment, you can run and test various of commands of Pychedelic Video Engine.
 ```bash
 python main.py -mode live --effects ColorChaos
 ```
