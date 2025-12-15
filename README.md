@@ -178,18 +178,23 @@ deactivate
 This returns you to your global system Python environment.
 
 ### Real-Time Video Processing
-Inside the virtual environment, you can run and test various of commands of Pychedelic Video Engine.
+Inside the virtual environment, you can run and test various modules and effects of Pychedelic Video Engine.
 ```bash
-python main.py -mode live --effects ColorChaos
+python cli.py -mode live --modules ColorChaos # Live processing feed with a general module chain
+python cli.py -mode live --modules ColorChaos --effects rgb_split lcd_sine_shift channel_swap # Live processing feed with a defined effect chain
 ```
 _Process video files with live preview and real-time effects!_
 
-
 ### Video Rendering & Export
 ```bash
-python main.py -mode render --effects VHS --functions vhs_color_bleeding
+python cli.py -mode render --modules VHS # Rendering with a general module chain
+python cli.py -mode render --modules VHS --effects vhs_color_bleeding # Rendering with a defined module chain
 ```
-_Render video files with mathematical transformations and export results_
+### Debug mode
+To debug the process and analyze the results, simply run the commands with `--debug` flag :
+```bash
+python cli.py -mode webcam --modules Grunge --effects washed_emo_layers --debug
+```
 
 ## Gallery
 
