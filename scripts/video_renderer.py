@@ -24,7 +24,7 @@ def videoRenderer(args):
     moduleManager = ModuleManager()
     configure = Configure()
     config = configure.load_config()    
-    ASSETS_PATH = config["assets"]["assets_video"]
+    ASSETS_PATH = config["assets"]["assets_videos"]
 
     # ------------------- Initialize processors from here -------------------
 

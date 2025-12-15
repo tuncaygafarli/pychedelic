@@ -6,10 +6,14 @@ import random
 from colorama import Fore, Back, Style, init
 
 from processors.face_detection import FaceDetector
+from scripts.configure import Configure
 from modules.color_chaos import ColorChaos
 
 faceDetector = FaceDetector()
 color_chaos = ColorChaos()
+configure = Configure()
+
+config = configure.load_config()
 
 class FacialArtifacts:
 
@@ -144,7 +148,7 @@ class FacialArtifacts:
                 extensions = ['.jpg', '.jpeg', '.png', '.bmp', '.webp']
 
                 for ext in extensions:
-                    img_path = f"assets/{self.stored_image_path}{ext}"
+                    img_path = f"{config["assets"]["assets_images"]}{self.stored_image_path}{ext}"
                     img = cv.imread(img_path)
                     if img is not None:
                         break
