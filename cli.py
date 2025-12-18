@@ -95,7 +95,6 @@ def main():
         listEffects(args)
     elif args.init:
         configure.init()
-
     elif args.configure:
         key, value = args.configure
         config = configure.load_config()

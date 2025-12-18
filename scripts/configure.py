@@ -19,7 +19,9 @@ class Configure():
         'assets': {
             'assets_video': 'assets/video/',
             'assets_audio': 'assets/audio/',
-            'build_dir': 'build'
+            'build_dir': 'build',
+            'webcam' : 0,
+            'use_gpu' : False
         }
     }
         try:

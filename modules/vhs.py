@@ -97,17 +97,18 @@ class VHS:
 
         noisy_frame = frame_float + noise
 
-        return np.clip(noisy_frame, 0, 255).astype(np.uint8)
+        return np.clip(noisy_frame, 0, 255, None).astype(np.uint8)
 
     # <-------------------- VHS Head Clog -------------------->
 
     def vhs_head_clog(self, frame):
         current_index = len(self.processed_frames)
+        clog_threshold = self.complexities[-1] // self.threshold
 
-        if current_index > 0 and random.random() < 0.8:
+        if current_index > 0 and random.random() < clog_threshold:
             previous_frame = self.processed_frames[current_index - 1]
 
-            mix_ratio = random.uniform(0.3, 0.8)
+            mix_ratio = random.uniform(0.2, 0.8)
             frame = cv.addWeighted(frame, 1-mix_ratio, previous_frame, mix_ratio, 0)
 
         return frame
@@ -192,7 +193,7 @@ class VHS:
         return frame
 
     def vhs_custom_kernel_processor(self, frame):
-        ddepth = -1
+        ddepth = cv.CV_8S
         ind = 0
 
         while True:
