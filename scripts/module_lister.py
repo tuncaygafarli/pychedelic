@@ -1,15 +1,7 @@
-import cv2 as cv
-import argparse
-import time
-import subprocess
-import sys
-import os
-from datetime import datetime
-
 from modules.module_manager import ModuleManager
 
 def listModules(args):
-    ModuleManager = ModuleManager()
+    moduleManager = ModuleManager()
 
-    for effect, functions in ModuleManager.effects_functions.items():
+    for effect, functions in moduleManager.effects_functions.items():
         print(f"{effect}")

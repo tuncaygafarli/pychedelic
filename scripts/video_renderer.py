@@ -1,7 +1,5 @@
 import cv2 as cv
-import argparse
 import time
-import subprocess
 import os
 import sys
 from datetime import datetime

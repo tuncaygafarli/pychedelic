@@ -1,9 +1,5 @@
 import cv2 as cv
-import argparse
 import time
-import subprocess
-import sys
-import os
 from datetime import datetime
 from colorama import Fore, Back, Style, init
 

@@ -1,6 +1,5 @@
 import yaml
 import os
-import subprocess
 from colorama import Fore, Style, Back, init
 
 from utils.console_logger import ConsoleLogger
