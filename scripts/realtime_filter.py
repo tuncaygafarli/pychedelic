@@ -24,9 +24,9 @@ def realtimeFilter(args):
 
     moduleManager = ModuleManager()
     configure = Configure()
-    config = configure.load_config()    
+    config = configure.load_config()
     ASSETS_PATH = config["assets"]["assets_videos"]
-    
+
     # ------------------- Initialize utils from here -------------------
 
     logger = ConsoleLogger()
@@ -39,7 +39,7 @@ def realtimeFilter(args):
 
     # I/O
     VIDEO_NAME_IO= str(input(Fore.BLUE + "Choose the video to process : "))
-    
+
     if(VIDEO_NAME_IO + ".mp4" not in files):
         logger.error(f"Couldn't find the associated file '{VIDEO_NAME_IO}'. Please check the name, or configure proper assets path.")
         return False
@@ -53,7 +53,7 @@ def realtimeFilter(args):
     if not capture.isOpened():
         logger.error(f"Failed to open video file: {VIDEO_PATH}")
         return False
-    
+
     width = int(capture.get(cv.CAP_PROP_FRAME_WIDTH))
     height = int(capture.get(cv.CAP_PROP_FRAME_HEIGHT))
 
@@ -64,10 +64,10 @@ def realtimeFilter(args):
     else:
         print("Undefined argument.")
         return -1
-        
+
     cv.namedWindow('Video Feed', cv.WINDOW_NORMAL)
     cv.resizeWindow('Video Feed', width, height)
-    
+
     # <--------------------- Script loop from here --------------------->
 
     while True:
@@ -92,29 +92,29 @@ def realtimeFilter(args):
         fps = len(active_module.frames) // elapsed_time if elapsed_time > 0 else 0
 
         # <--------------------- Debugging text from here --------------------->
-        
+
         if args.debug:
             logger.info(f"Current {active_module.name} threshold has set to " + Fore.GREEN + Style.BRIGHT + str(active_module.threshold))
 
-            cv.putText(processed_frame, "TIME PASSED : " + str(round(elapsed_time, 2)) + " SECONDS", (10, 50), 
+            cv.putText(processed_frame, "TIME PASSED : " + str(round(elapsed_time, 2)) + " SECONDS", (10, 50),
                 cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
-            cv.putText(processed_frame, "FPS : " + str(round(fps_cv, 2)), (10, 100), 
+            cv.putText(processed_frame, "FPS : " + str(round(fps_cv, 2)), (10, 100),
                 cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
-            cv.putText(processed_frame, "COMPLEXITY : " + str(round(complexity, 2)), (10, 150), 
+            cv.putText(processed_frame, "COMPLEXITY : " + str(round(complexity, 2)), (10, 150),
                 cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
-            
+
             if active_module.threshold is not None:
-                cv.putText(processed_frame, "THRESHOLD : " + str(round(active_module.threshold, 2)), (10, 200), 
+                cv.putText(processed_frame, "THRESHOLD : " + str(round(active_module.threshold, 2)), (10, 200),
                     cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
-                
+
                 if complexity > active_module.threshold:
-                    cv.putText(processed_frame, "CALIBRATED FRAME", (10, 300), 
+                    cv.putText(processed_frame, "CALIBRATED FRAME", (10, 300),
                         cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
                 else:
-                    cv.putText(processed_frame, "UNPROCESSED FRAME", (10, 300), 
+                    cv.putText(processed_frame, "UNPROCESSED FRAME", (10, 300),
                         cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
-                    
-            cv.putText(processed_frame, f"EFFECT: {moduleManager.effect_history[-1].name}", (10, 350), 
+
+            cv.putText(processed_frame, f"EFFECT: {moduleManager.effect_history[-1].name}", (10, 350),
                 cv.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
 
         if is_window_open("Video Feed"):

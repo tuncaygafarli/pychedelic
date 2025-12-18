@@ -37,8 +37,10 @@ class AudioProcessor:
             'sine_distortion': 1.0
         }
 
+        # TODO :  FIX ME ( DONE  )
         if self.audio_data.shape > 1:
             print("Initializing stereo audio : {self.audio_data}")
+            self.audio_data = self.audio.data[:len(self.audio_data)//2]
 
         # normalizing value between -1 and 1 for safe processing to prevent numerical overflow
         max_val = np.max(np.abs(self.audio_data))

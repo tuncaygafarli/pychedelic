@@ -90,11 +90,11 @@ class VHS:
 
     def vhs_noise(self, frame, noise_level=5):
         h, w, c = frame.shape
-        
+
         frame_float = frame.astype(np.float32)
 
         noise = np.random.uniform(-noise_level, noise_level, (h, w, c)).astype(np.float32)
-        
+
         noisy_frame = frame_float + noise
 
         return np.clip(noisy_frame, 0, 255).astype(np.uint8)
@@ -167,8 +167,8 @@ class VHS:
         map_y = (y_distorted * (h/2)) + h/2
 
         return cv.remap(frame, map_x.astype(np.float32), map_y.astype(np.float32), cv.INTER_LINEAR)
-    
-        
+
+
     def vhs_gritty(self, frame):
         hsv = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
         h, s, v = cv.split(hsv)
@@ -188,9 +188,23 @@ class VHS:
         g = cv.multiply(g, 1.1)
 
         frame = cv.GaussianBlur(cv.merge([b, g, r]), (5, 5), 0)
-        
+
         return frame
-    
+
+    def vhs_custom_kernel_processor(self, frame):
+        ddepth = -1
+        ind = 0
+
+        while True:
+            ind += 1
+            kernel_size  = 3 + 2 * ( ind % 5  )
+            kernel = np.ones((kernel_size, kernel_size), dtype=np.float32)
+            kernel /= ( kernel_size * kernel_size )
+
+            distortion = cv.filter2D(frame, ddepth, kernel)
+
+            return distortion
+
     # <-------------------- Dynamic Threshold Functions -------------------->
 
     def apply_vhs_complex(self, frame):
@@ -198,17 +212,19 @@ class VHS:
         frame = self.vhs_scan_lines(frame)
         frame = self.vhs_color_bleeding(frame)
         frame = self.vhs_head_clog(frame)
+        frame = self.vhs_barrel_distortion(frame)
 
         if random.random() < 0.015:
             frame = self.vhs_tape_damage(frame)
             frame = self.vhs_tape_glitch(frame)
 
         return frame
- 
+
     def apply_vhs_simple(self, frame):
         frame = self.vhs_gritty(frame)
         frame = self.vhs_scan_lines(frame)
         frame = self.vhs_color_bleeding(frame)
+        frame = self.vhs_barrel_distortion(frame)
 
         if random.random() < 0.005:
             frame = self.vhs_tape_damage(frame)
