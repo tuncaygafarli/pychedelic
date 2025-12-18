@@ -112,7 +112,7 @@ def realtimeFilter(args):
                     cv.putText(processed_frame, "UNPROCESSED FRAME", (10, 300),
                         cv.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
-            cv.putText(processed_frame, f"EFFECT: {moduleManager.effect_history[-1].name}", (10, 350),
+            cv.putText(processed_frame, f"EFFECT: {moduleManager.module_history[-1].name}", (10, 350),
                 cv.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
 
         if is_window_open("Video Feed"):

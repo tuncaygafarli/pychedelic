@@ -16,8 +16,8 @@ class Configure():
     def init(self):
         default_config = {
         'assets': {
-            'assets_video': 'assets/video/',
-            'assets_audio': 'assets/audio/',
+            'assets_videos': 'assets/videos/',
+            'assets_audios': 'assets/audios/',
             'build_dir': 'build',
             'webcam' : 0,
             'use_gpu' : False

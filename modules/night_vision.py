@@ -101,6 +101,6 @@ class NightVision:
     def apply_night_vision(self, frame):
         frame = self.night_vision_overlay(frame)
         frame = self.night_vision_barrel_distortion(frame, 0.1)
-        #frame = self._scan_lines(frame)
+        frame = self.night_vision_scan_lines(frame)
 
         return frame
