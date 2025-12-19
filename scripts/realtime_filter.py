@@ -5,7 +5,11 @@ from datetime import datetime
 from colorama import Fore, Back, Style, init
 
 from modules.module_manager import ModuleManager
+
+from processors.audio_processor import AudioProcessor
+
 from scripts.configure import Configure
+
 from utils.console_logger import ConsoleLogger
 
 init(autoreset=True)
@@ -23,6 +27,7 @@ def realtimeFilter(args):
     moduleManager = ModuleManager()
     configure = Configure()
     config = configure.load_config()
+    
     ASSETS_PATH = config["assets"]["assets_videos"]
 
     # ------------------- Initialize utils from here -------------------
@@ -44,6 +49,10 @@ def realtimeFilter(args):
     else :
         VIDEO_PATH = ASSETS_PATH + VIDEO_NAME_IO + ".mp4"
         logger.success(f"File found. Processing: {VIDEO_PATH}")
+
+    audioproc = AudioProcessor()
+    audio_dump = audioproc.dump_tempfile(VIDEO_PATH)
+    audioproc.play_audio(audio_dump)
     print(VIDEO_PATH)
 
     capture = cv.VideoCapture(VIDEO_PATH)
@@ -135,3 +144,10 @@ def realtimeFilter(args):
             continue
 
     cv.destroyAllWindows()
+
+    if audio_dump and os.path.exists(audio_dump):
+        try:
+            os.remove(audio_dump)
+            logger.info(f"Deleted temp audio file: {audio_dump}")
+        except Exception as e:
+            logger.error(f"Failed to delete temp file: {e}")
