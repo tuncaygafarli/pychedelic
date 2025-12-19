@@ -5,6 +5,10 @@ from scipy.fftpack import fft, ifft, fftfreq
 from scipy import signal
 import librosa
 
+from utils.normalizers import Normalizer
+
+normalizer = Normalizer()
+
 class AudioProcessor:
     def __init__(self, audio_path, sample_rate=44100, buffer_size=1024):
         self.audio_path = audio_path
@@ -67,7 +71,8 @@ class AudioProcessor:
 
         return frequencies, magnitudes_db
 
-    def bass_energy(self):
+    def bass_energy(self, frame):
         frequencies, decibels = self.analyze_freq_content()
+        intensity = normalizer.sigmoid_normalize(frame)
 
-        print(frequencies)
+        return self.band_multiplication(frame, frequencies, intensity)
