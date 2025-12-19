@@ -6,9 +6,14 @@ from datetime import datetime
 from colorama import Fore, Back, Style, init
 
 from modules.module_manager import ModuleManager
+
 from scripts.configure import Configure
+
+from processors.audio_processor import AudioProcessor
+
 from utils.console_logger import ConsoleLogger
 
+audioproc = AudioProcessor()
 init(autoreset=True)
 
 # ------------------- Importing functions from here -------------------

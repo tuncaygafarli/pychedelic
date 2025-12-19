@@ -12,13 +12,15 @@ from scripts.configure import Configure
 
 from utils.console_logger import ConsoleLogger
 
+audioproc = AudioProcessor()
 init(autoreset=True)
 
-def is_window_open(window_name):
+def is_window_open(window_name, audio_dump):
     try:
         status = cv.getWindowProperty(window_name, cv.WND_PROP_VISIBLE)
         return status > 0
     except:
+        audioproc.delete_temp_audio(audio_dump)
         return False
 
 def realtimeFilter(args):
@@ -50,7 +52,6 @@ def realtimeFilter(args):
         VIDEO_PATH = ASSETS_PATH + VIDEO_NAME_IO + ".mp4"
         logger.success(f"File found. Processing: {VIDEO_PATH}")
 
-    audioproc = AudioProcessor()
     audio_dump = audioproc.dump_tempfile(VIDEO_PATH)
     audioproc.play_audio(audio_dump)
     print(VIDEO_PATH)
@@ -124,7 +125,7 @@ def realtimeFilter(args):
             cv.putText(processed_frame, f"EFFECT: {moduleManager.module_history[-1].name}", (10, 350),
                 cv.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
 
-        if is_window_open("Video Feed"):
+        if is_window_open("Video Feed", audio_dump):
             cv.imshow("Video Feed", processed_frame)
         else :
             if args.debug:
@@ -145,9 +146,4 @@ def realtimeFilter(args):
 
     cv.destroyAllWindows()
 
-    if audio_dump and os.path.exists(audio_dump):
-        try:
-            os.remove(audio_dump)
-            logger.info(f"Deleted temp audio file: {audio_dump}")
-        except Exception as e:
-            logger.error(f"Failed to delete temp file: {e}")
+    audioproc.delete_temp_audio(audio_dump)

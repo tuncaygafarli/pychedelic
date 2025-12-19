@@ -107,6 +107,14 @@ class AudioProcessor:
         
         except Exception as e:
             logger.error(f"winsound failed: {e}")
+
+    def delete_temp_audio(self, audio_dump):
+        if audio_dump and os.path.exists(audio_dump):
+            try:
+                os.remove(audio_dump)
+                logger.info(f"Deleted temp audio file: {audio_dump}")
+            except Exception as e:
+                logger.error(f"Failed to delete temp file: {e}")
         
     def band_multiplication(self, frame, frequency_band, intensity):
             if frequency_band == "bass":
