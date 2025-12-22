@@ -54,7 +54,6 @@ def realtimeFilter(args):
 
     audio_dump = audioproc.dump_tempfile(VIDEO_PATH)
     audioproc.play_audio(audio_dump)
-    print(VIDEO_PATH)
 
     capture = cv.VideoCapture(VIDEO_PATH)
 
